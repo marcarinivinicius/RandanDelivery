@@ -1,26 +1,20 @@
 # Apresentação
-Projeto de apresentação de serviço de Alguél de veículos para Delivery;
+Projeto de serviço de aluguel de motos para Delivery;
 
 ## Detalhes do Projeto 
 - .NET 8
 - Design Pattern: Solid
-- Banco de dados PostgreSQL
+- Banco de dados: PostgreSQL
 - ORM: EntityFramework Core
 - Framework de Testes: XUnit
 - Framework de Mock: Moq
 - Projeto para testes de Unidade
 
-# Dados de requisitos
 
-## Requisitos não funcionais 
-- A aplicação deverá ser construida com .Net utilizando C#.
-- Utilizar apenas os seguintes bancos de dados (Postgress, MongoDB)
-    - Não utilizar PL/pgSQL
-- Escolha o sistema de mensageria de sua preferencia( RabbitMq, Sqs/Sns , Kafka, Gooogle Pub/Sub ou qualquer outro)
+## Dados de requisitos
+Objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
 
-## Aplicação a ser desenvolvida
-Seu objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
-### Casos de uso
+#### Casos de uso
 - Eu como usuário admin quero cadastrar uma nova moto.
   - Os dados obrigatórios da moto são Identificador, Ano, Modelo e Placa
   - A placa é um dado único e não pode se repetir.
