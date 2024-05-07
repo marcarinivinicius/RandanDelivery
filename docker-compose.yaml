@@ -12,7 +12,6 @@ services:
     restart: always
     volumes:
       - pg-data:/var/lib/postgres/data
-  
   redis_db:
     image: redis:latest
     container_name: redis_db
@@ -20,31 +19,28 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
-      
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672" # Porta padrão para conexões RabbitMQ
-      - "15672:15672" # Porta para a interface de gerenciamento web
+      - "5672:5672" 
+      - "15672:15672"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
-
   user-api:
     image: randandel/user-service:latest
     build:
      context: .
-     dockerfile: services/user/User.API/dockerfile
+     dockerfile: services/user/User.API/Dockerfile
     environment:
-     - ASPNETCORE_ENVIRONEMT= Development
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+80
     depends_on:
      - pg_db
      - redis_db
      - rabbitmq
-
-  
 volumes:
  pg-data:
  redis-data:

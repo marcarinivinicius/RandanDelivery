@@ -27,7 +27,7 @@ WORKDIR "/services/user/User.API"
 RUN dotnet build "./User.API.csproj" -c Release -o /app/src/out
 
 #Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/src/out .
 ENTRYPOINT [ "dotnet",  "User.API.dll"]
