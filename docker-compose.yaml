@@ -31,12 +31,19 @@ services:
       RABBITMQ_DEFAULT_PASS: password
   user-api:
     image: randandel/user-service:latest
+    ports:
+      - "80:80" 
     build:
      context: .
      dockerfile: services/user/User.API/Dockerfile
     environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+80
+     - JWT_SETTINGS__SECRET=CF6F07A3B43D4A6B5F9F5DE7687A392C6E71E2AABD7D2D83CFB0F58B6CE6C369
+     - S3IMAGE__BUCKET=
+     - S3IMAGE__KEY=
+     - S3IMAGE__SECRET=
+     - REDIS__CONNECTIONSTRING=localhost
     depends_on:
      - pg_db
      - redis_db
