@@ -56,8 +56,6 @@ namespace User.Infra
                 return new RabbitConnection(factory, retryCount);
             });
 
-
-
             services.AddScoped<RabbitProducer>();
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
             services.AddSingleton<UserRpcListener>();
