@@ -11,6 +11,7 @@ COPY services/user/User.Domain/User.Domain.csproj /services/user/User.Domain/
 COPY services/user/User.Infra/User.Infra.csproj /services/user/User.Infra/
 COPY services/user/User.Services/User.Services.csproj /services/user/User.Services/
 COPY services/user/User.S3.Lib/User.S3.Lib.csproj /services/user/User.S3.Lib/
+COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
 
 # Restore package deps
 RUN dotnet restore AlluRider.sln
@@ -21,6 +22,7 @@ COPY services/user/User.Domain /services/user/User.Domain
 COPY services/user/User.Infra /services/user/User.Infra
 COPY services/user/User.Services /services/user/User.Services
 COPY services/user/User.S3.Lib /services/user/User.S3.Lib
+COPY services/rabbitmq/RabbitMq.Notify /services/rabbitmq/RabbitMq.Notify
 
 
 WORKDIR "/services/user/User.API"

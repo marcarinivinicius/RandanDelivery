@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RabbitMq.Notify.Interfaces;
+using RabbitMq.Notify.Services.RabbitMq.Notify.Services;
+using RabbitMQ.Client;
 using System.Text;
 using User.API.Auth;
 using User.API.Interfaces.Auth;
@@ -13,6 +16,7 @@ using User.Services.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 var secretKey = builder.Configuration.GetValue<string>("JwtSettings:Secret");
+
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
@@ -97,6 +101,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseRabbitListener();
 
 app.UseHttpsRedirection();
 app.MapControllers();

@@ -21,9 +21,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		docker-compose.yaml = docker-compose.yaml
+		DockerfileModel = DockerfileModel
 		README.md = README.md
-		DockerfileModel. = DockerfileModel.
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rabbitmq", "rabbitmq", "{64BD3C39-08DB-4624-8496-803835D5DE8C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4417EE1D-0FEF-4759-8863-8D382110464F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user", "user", "{8BE10C7E-0685-4501-AF86-8EF0440B788B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMq.Notify", "services\rabbitmq\RabbitMq.Notify\RabbitMq.Notify.csproj", "{095E0490-D645-46E3-845B-2FBC35C5CD93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +59,10 @@ Global
 		{A413EB44-C98E-4FE8-B781-90655E8D6B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A413EB44-C98E-4FE8-B781-90655E8D6B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A413EB44-C98E-4FE8-B781-90655E8D6B4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{095E0490-D645-46E3-845B-2FBC35C5CD93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{095E0490-D645-46E3-845B-2FBC35C5CD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{095E0490-D645-46E3-845B-2FBC35C5CD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{095E0490-D645-46E3-845B-2FBC35C5CD93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +74,9 @@ Global
 		{364D9B88-1E3E-4621-94E1-A73CFA15AEB7} = {7B60DA80-B3BF-4B07-8945-6FE8B40359B6}
 		{0925404B-502C-4A00-95ED-338E712DDF8B} = {7B60DA80-B3BF-4B07-8945-6FE8B40359B6}
 		{A413EB44-C98E-4FE8-B781-90655E8D6B4E} = {7B60DA80-B3BF-4B07-8945-6FE8B40359B6}
+		{64BD3C39-08DB-4624-8496-803835D5DE8C} = {2C90B177-D3C9-46EF-B4CC-F49F0B31FF60}
+		{8BE10C7E-0685-4501-AF86-8EF0440B788B} = {4417EE1D-0FEF-4759-8863-8D382110464F}
+		{095E0490-D645-46E3-845B-2FBC35C5CD93} = {64BD3C39-08DB-4624-8496-803835D5DE8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0C5E7633-993B-41AE-B427-34B19861EB65}
