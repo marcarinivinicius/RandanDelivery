@@ -5,7 +5,7 @@ using Vehicle.Infra.Messages;
 using Vehicle.Infra.Messages.Consumers;
 
 
-namespace User.Infra
+namespace Vehicle.Infra
 {
     public static class InfraBrokerExtensions
     {

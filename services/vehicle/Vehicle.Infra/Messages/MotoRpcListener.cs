@@ -15,11 +15,11 @@ namespace Vehicle.Infra.Messages
     {
 
         private readonly IRabbitConnection _persistentConnection;
-        private readonly IMotoRepository _motoRepository;
-        public MotoRpcListener(IRabbitConnection persistentConnection, IServiceScopeFactory factory, IMotoRepository motoRepository)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public MotoRpcListener(IRabbitConnection persistentConnection, IServiceScopeFactory factory)
         {
             _persistentConnection = persistentConnection;
-            _motoRepository = motoRepository;
+            _serviceScopeFactory = factory;
         }
         public void Consume(string queue)
         {
@@ -61,24 +61,29 @@ namespace Vehicle.Infra.Messages
                 List<Moto> clients = new List<Moto>();
                 if (ea.RoutingKey == "publish")
                 {
-                    string method = data!.Method;
-                    switch (method)
+                    using (var scope = _serviceScopeFactory.CreateScope())
                     {
-                        case "GetMotoId":
-                            int motoId = data.Payload["Id"];
+                        var _motoRepository = scope.ServiceProvider.GetRequiredService<IMotoRepository>();
 
-                            var moto = await _motoRepository.Get(motoId);
-                            if (moto != null)
-                            {
-                                clients.Add(moto);
-                            }
-                            break;
-                        case "GetMotoFilter":
-                            var filters = JsonConvert.DeserializeObject<MotoFilters>(data.Payload["Filters"].ToString());
-                            var motos = await _motoRepository.GetAll(filters);
-                            clients.AddRange(motos);
+                        string method = data!.Method;
+                        switch (method)
+                        {
+                            case "GetMotoId":
+                                int motoId = data.Payload["Id"];
 
-                            break;
+                                var moto = await _motoRepository.Get(motoId);
+                                if (moto != null)
+                                {
+                                    clients.Add(moto);
+                                }
+                                break;
+                            case "GetMotoFilter":
+                                var filters = JsonConvert.DeserializeObject<MotoFilters>(data.Payload["Filters"].ToString());
+                                var motos = await _motoRepository.GetAll(filters);
+                                clients.AddRange(motos);
+
+                                break;
+                        }
                     }
                 }
                 response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });

@@ -9,7 +9,7 @@ namespace Vehicle.Domain.Validators
         public MotoValidator()
         {
 
-            RuleFor(x => x.Plate)
+            RuleFor(x => x.PlateCode)
              .NotEmpty().WithMessage("The vehicle plate can't be empty.")
              .When(x => (x.Country == "Brazil" || x.Country == "Brasil"))
              .Must(BeValidBrazilianPlate).WithMessage("The plate is not valid for Brazil.");

@@ -6,7 +6,6 @@ namespace Vehicle.Infra.Context
 {
     public class VehicleContext : DbContext
     {
-        public VehicleContext() { }
 
         public VehicleContext(DbContextOptions options) : base(options) { }
 
@@ -34,8 +33,6 @@ namespace Vehicle.Infra.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=vehicle; PORT=5432";
-            optionsBuilder.UseNpgsql(connectionString);
             base.OnConfiguring(optionsBuilder);
         }
     }
