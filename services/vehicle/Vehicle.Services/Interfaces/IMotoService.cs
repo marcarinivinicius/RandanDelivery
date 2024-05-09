@@ -1,4 +1,5 @@
-﻿using Vehicle.Services.DTO;
+﻿using Vehicle.Infra.Models;
+using Vehicle.Services.DTO;
 
 namespace Vehicle.Services.Interfaces
 {
@@ -8,7 +9,7 @@ namespace Vehicle.Services.Interfaces
         Task<MotoDTO> Update(MotoDTO client);
         Task Remove(long id);
         Task<MotoDTO> Get(long id);
-        Task<List<MotoDTO>> GetAll();
+        Task<List<MotoDTO>> GetAll(MotoFilters filters);
 
     }
 }

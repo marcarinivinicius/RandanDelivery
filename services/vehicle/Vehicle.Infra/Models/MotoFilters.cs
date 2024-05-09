@@ -14,5 +14,6 @@ namespace Vehicle.Infra.Models
         public string Country { get; set; }
         public DateOnly Fabrication { get; set; }
         public bool Active { get; set; }
+        public bool AllRecords { get; set; }
     }
 }

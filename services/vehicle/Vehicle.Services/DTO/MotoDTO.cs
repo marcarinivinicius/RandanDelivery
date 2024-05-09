@@ -2,7 +2,7 @@
 {
     public sealed record MotoDTO
     {
-
+        public long Id { get; set; }
         public string PlateCode { get; set; }
         public string Color { get; set; }
         public string Model { get; set; }
@@ -11,8 +11,9 @@
 
         protected MotoDTO() { }
 
-        public MotoDTO(string plateCode, string color, string model, string country, DateOnly fabrication)
+        public MotoDTO(long id, string plateCode, string color, string model, string country, DateOnly fabrication)
         {
+            Id = id;
             PlateCode = plateCode;
             Color = color;
             Model = model;

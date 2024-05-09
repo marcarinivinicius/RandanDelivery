@@ -14,15 +14,17 @@ namespace Vehicle.Infra.Repositories
 
             if (filters != null)
             {
-                if (filters.Active)
+                if (!filters.AllRecords)
                 {
-                    query = query.Where(moto => moto.Active);
+                    if (filters.Active)
+                    {
+                        query = query.Where(moto => moto.Active);
+                    }
+                    else
+                    {
+                        query = query.Where(moto => moto.Active == false);
+                    }
                 }
-                else
-                {
-                    query = query.Where(moto => moto.Active == false);
-                }
-
                 if (!string.IsNullOrEmpty(filters.PlateCode))
                 {
                     query = query.Where(moto => moto.PlateCode.Contains(filters.PlateCode));

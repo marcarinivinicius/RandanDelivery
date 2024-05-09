@@ -1,7 +1,10 @@
 ﻿
 using AutoMapper;
 using RabbitMq.Notify.Services;
+using Vehicle.Domain.Entities;
+using Vehicle.Domain.Exceptions;
 using Vehicle.Infra.Interfaces;
+using Vehicle.Infra.Models;
 using Vehicle.Services.DTO;
 using Vehicle.Services.Interfaces;
 
@@ -19,29 +22,49 @@ namespace Vehicle.Services.Service
             _rabbitMqClient = rabbitMqClient;
         }
 
-        public Task<MotoDTO> Create(MotoDTO client)
+        public async Task<MotoDTO> Create(MotoDTO motoDTO)
         {
-            throw new NotImplementedException();
+            MotoFilters filters = new()
+            {
+                PlateCode = motoDTO.PlateCode
+            };
+            var _hasMoto = await _motoRepository.GetAll(filters);
+            if (_hasMoto != null && _hasMoto.Count() > 0) throw new PersonalizeExceptions("This vehicle is already registered");
+
+            var moto = _mapper.Map<Moto>(motoDTO);
+            moto.Validate();
+            var nMoto = await _motoRepository.Create(moto);
+            return _mapper.Map<MotoDTO>(nMoto);
         }
 
-        public Task<MotoDTO> Get(long id)
+        public async Task<MotoDTO> Update(MotoDTO motoDTO)
         {
-            throw new NotImplementedException();
+            var _hasMoto = await _motoRepository.Get(motoDTO.Id);
+            if (_hasMoto == null) throw new PersonalizeExceptions("Vehicle not found");
+            var moto = _mapper.Map<Moto>(motoDTO);
+            moto.Validate();
+            var nMoto = await _motoRepository.Update(moto);
+
+            return _mapper.Map<MotoDTO>(nMoto);
         }
 
-        public Task<List<MotoDTO>> GetAll()
+        public async Task Remove(long id)
         {
-            throw new NotImplementedException();
+            await _motoRepository.Delete(id);
         }
 
-        public Task Remove(long id)
+        public async Task<MotoDTO> Get(long id)
         {
-            throw new NotImplementedException();
+            var motoDTO = await _motoRepository.Get(id);
+            return _mapper.Map<MotoDTO>(motoDTO);
         }
 
-        public Task<MotoDTO> Update(MotoDTO client)
+        public async Task<List<MotoDTO>> GetAll(MotoFilters filters)
         {
-            throw new NotImplementedException();
+            var motosDTO = await _motoRepository.GetAll(filters);
+
+            return _mapper.Map<List<MotoDTO>>(motosDTO);
         }
+
     }
 }

@@ -4,6 +4,7 @@ using Vehicle.API.Models;
 using Vehicle.API.ViewModels;
 using Vehicle.API.ViewModels.Moto;
 using Vehicle.Domain.Exceptions;
+using Vehicle.Infra.Models;
 using Vehicle.Services.DTO;
 using Vehicle.Services.Interfaces;
 using Vehicle.Services.Model;
@@ -199,17 +200,23 @@ namespace Vehicle.API.Controllers
 
             try
             {
-                var motorcycleDto = await _motoService.Get(plateCode);
+                MotoFilters motoFilters = new MotoFilters()
+                {
+                    PlateCode = plateCode,
+                    AllRecords = true
+                };
+
+                var motorcycleDto = await _motoService.GetAll(motoFilters);
                 if (motorcycleDto == null)
                 {
-                    return Ok(new BaseResultModel
+                    return Ok(new ResultModel
                     {
                         Success = true,
                         Message = "Motorcycle not found",
                         MetaData = { }
                     });
                 }
-                return Ok(new BaseResultModel
+                return Ok(new ResultModel
                 {
                     Success = true,
                     Message = "Motorcycle returned successfully",
