@@ -135,7 +135,6 @@ namespace Vehicle.API.Controllers
             }
         }
 
-
         [HttpGet]
         [Route("{id}/")]
         public async Task<IActionResult> Get(long id)

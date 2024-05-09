@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "RandanDelivery User API",
+        Title = "RandanDelivery Vehicle API",
         Version = "v1",
         Description = "This API is builded for challenge in the other Company",
         Contact = new OpenApiContact
