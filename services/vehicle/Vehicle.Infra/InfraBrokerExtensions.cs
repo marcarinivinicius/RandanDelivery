@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vehicle.Infra.Messages;
-using Vehicle.Infra.Messages.Consumers;
 
 
 namespace Vehicle.Infra

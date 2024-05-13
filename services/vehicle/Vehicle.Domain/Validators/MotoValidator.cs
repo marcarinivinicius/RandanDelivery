@@ -21,8 +21,7 @@ namespace Vehicle.Domain.Validators
             RuleFor(x => x.Model)
                 .NotEmpty().WithMessage("The vehicle model can't be empty.")
                 .NotNull().WithMessage("The vehicle model can't be null.")
-                .MaximumLength(80).WithMessage("The rider vehicle model must have the maximum of eighty characters.")
-                .MinimumLength(5).WithMessage("The vehicle model must have at least five characters.");
+                .MaximumLength(80).WithMessage("The rider vehicle model must have the maximum of eighty characters.");
             RuleFor(x => x.Fabrication)
                 .NotEmpty().WithMessage("The vehicle's manufacturing date cannot be empty.")
                 .NotNull().WithMessage("The vehicle's manufacturing date cannot be null.")
@@ -32,8 +31,7 @@ namespace Vehicle.Domain.Validators
 
         private bool BeValidBrazilianPlate(string plate)
         {
-            // Expressão regular para validar placa de carro no formato brasileiro
-            var regex = new Regex(@"^[A-Z]{3}\-\d{4}$");
+            var regex = new Regex(@"^[A-Z]{3}\d{1}[A-Z]\d{2}$");
 
             return regex.IsMatch(plate);
         }

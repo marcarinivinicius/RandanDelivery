@@ -32,7 +32,7 @@ namespace Vehicle.API.Controllers
 
             if (customIdentity!.CustomRole != EnumRole.Admin)
             {
-                Unauthorized(new ResultModel
+                return Unauthorized(new ResultModel
                 {
                     Success = false,
                     Message = "Login not authorized for this action",
@@ -69,7 +69,7 @@ namespace Vehicle.API.Controllers
 
             if (customIdentity!.CustomRole != EnumRole.Admin)
             {
-                Unauthorized(new ResultModel
+                return Unauthorized(new ResultModel
                 {
                     Success = false,
                     Message = "Login not authorized for this action",
@@ -106,7 +106,7 @@ namespace Vehicle.API.Controllers
 
             if (customIdentity!.CustomRole != EnumRole.Admin)
             {
-                Unauthorized(new ResultModel
+                return Unauthorized(new ResultModel
                 {
                     Success = false,
                     Message = "Login not authorized for this action",
@@ -143,7 +143,7 @@ namespace Vehicle.API.Controllers
 
             if (customIdentity!.CustomRole != EnumRole.Admin)
             {
-                Unauthorized(new ResultModel
+                return Unauthorized(new ResultModel
                 {
                     Success = false,
                     Message = "Login not authorized for this action",
@@ -189,7 +189,7 @@ namespace Vehicle.API.Controllers
 
             if (customIdentity!.CustomRole != EnumRole.Admin)
             {
-                Unauthorized(new ResultModel
+                return Unauthorized(new ResultModel
                 {
                     Success = false,
                     Message = "Login not authorized for this action",

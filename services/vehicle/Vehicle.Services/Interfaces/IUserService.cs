@@ -4,6 +4,6 @@ namespace Vehicle.Services.Interfaces
 {
     public interface IUserService
     {
-        public UserModel GetLoggedInUser(string email);
+        public Task<UserModel> GetLoggedInUser(string email);
     }
 }

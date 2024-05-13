@@ -5,6 +5,6 @@ public class CreateMotoViewModel
     public string Color { get; set; }
     public string Model { get; set; }
     public string Country { get; set; }
-    public DateOnly Fabrication { get; set; }
+    public string Fabrication { get; set; }
 
 }

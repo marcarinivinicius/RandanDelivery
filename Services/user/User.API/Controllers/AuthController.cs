@@ -30,6 +30,16 @@ namespace User.API.Controllers
             try
             {
                 var user = await _clientServices.GetByEmail(authModel.Login);
+                if(user == null)
+                {
+                    return BadRequest(new BaseResultModel
+                    {
+                        Message = "User not found",
+                        Success = false,
+                        MetaData = { }
+                    });
+                }
+
                 if (user.Password == authModel.Password)
                 {
                     var tokenResult = _tokenGenerator.GenerateToken(user.Email, (EnumRole)user.Role);

@@ -1,90 +1,114 @@
-﻿using Newtonsoft.Json;
-using RabbitMq.Notify.Interfaces;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using RabbitMQ.Client;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
-using RabbitMq.Notify.Utils;
+using RabbitMq.Notify.Interfaces;
 
-namespace Vehicle.Infra.Messages.Consumers
+public class MotoConsumer
 {
-    public class MotoConsumer
+    private readonly IRabbitConnection _persistentConnection;
+
+    public MotoConsumer(IRabbitConnection persistentConnection)
     {
-        private readonly IRabbitConnection _persistentConnection;
-        public MotoConsumer(IRabbitConnection persistentConnection)
+        _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
+    }
+
+    public void Consume(string queueName)
+    {
+        if (!_persistentConnection.IsConnected)
+            _persistentConnection.TryConnect();
+
+        using (var channel = _persistentConnection.CreateChannel())
         {
-            _persistentConnection = persistentConnection;
-        }
-
-        public void Consume(string queue)
-        {
-
-            if (!_persistentConnection.IsConnected)
-                _persistentConnection.TryConnect();
-
-            var channel = _persistentConnection.CreateChannel();
+            // Declaração da fila com opções adicionais
             var args = new Dictionary<string, object> { { "x-single-active-consumer", true } };
+            channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: args);
 
-            channel.QueueDeclare(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: args);
-
-            // BasicQos method uses which to make it possible to limit the number of unacknowledged messages on a channel.
+            // Configuração da Qualidade de Serviço (QoS)
             channel.BasicQos(0, 1, true);
+
+            // Configuração do consumidor
             var consumer = new EventingBasicConsumer(channel);
-
-            BasicGetResult result = channel.BasicGet(queue, false);
-            channel.BasicRecover(true);
-            consumer.Received += (ch, ea) =>
+            consumer.Received += (sender, eventArgs) =>
             {
-                if (ch != null) ReceivedEvent(ch, ea, channel);
+                HandleMessage(eventArgs, channel);
             };
 
-            consumer.Shutdown += (o, e) =>
-            {
-                //logging
-            };
-
-            channel.BasicConsume(queue: queue, autoAck: false, consumer: consumer);
+            // Início do consumo de mensagens
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
         }
+    }
 
-        private static void ReceivedEvent(object sender, BasicDeliverEventArgs e, IModel channel)
+    private void HandleMessage(BasicDeliverEventArgs eventArgs, IModel channel)
+    {
+        string customRetryHeaderName = "number-of-retries";
+        int retryCount = GetRetryCount(eventArgs.BasicProperties, customRetryHeaderName);
+        string message = Encoding.UTF8.GetString(eventArgs.Body.Span);
+
+        try
         {
-            string customRetryHeaderName = "number-of-retries";
-            int retryCount = HelperUtils.GetRetryCountFromMessage(e.BasicProperties, customRetryHeaderName);
-            var message = Encoding.UTF8.GetString(e.Body.Span);
+            var data = JsonConvert.DeserializeObject<dynamic>(message);
+            var response = new HttpResponseMessage();
 
-            try
+            if (eventArgs.RoutingKey == "direct")
             {
-                var data = JsonConvert.DeserializeObject<dynamic>(message);
-                var response = new HttpResponseMessage();
+                // Lógica de processamento para rota 'direct'
+            }
 
-                if (e.RoutingKey == "direct")
-                {
-                    //
-                }
-            }
-            catch
-            {
-                if (retryCount != 5)
-                {
-                    IBasicProperties propertiesForCopy = channel.CreateBasicProperties();
-                    IDictionary<string, object> clone = HelperUtils.CloneHeaders(e.BasicProperties);
-                    propertiesForCopy.Headers = clone;
-                    propertiesForCopy.Headers[customRetryHeaderName] = ++retryCount;
-                    channel.BasicPublish(e.Exchange, e.RoutingKey, propertiesForCopy, e.Body);
-                }
-                else
-                {
-                    // logging
-                }
-            }
-            finally
-            {
-                channel.BasicAck(e.DeliveryTag, false);
-            }
+            // Processamento adicional conforme necessário
         }
-
-        public void Disconnect()
+        catch (Exception ex)
         {
-            _persistentConnection.Dispose();
+            // Tratamento de erros durante o processamento da mensagem
+            HandleProcessingError(ex, eventArgs, channel, customRetryHeaderName, retryCount);
         }
+        finally
+        {
+            // Confirmação da entrega da mensagem
+            channel.BasicAck(eventArgs.DeliveryTag, false);
+        }
+    }
+
+    private void HandleProcessingError(Exception ex, BasicDeliverEventArgs eventArgs, IModel channel, string customRetryHeaderName, int retryCount)
+    {
+        if (retryCount < 5)
+        {
+            // Se houver tentativas restantes, reenvia a mensagem com contagem de tentativas atualizada
+            IBasicProperties propertiesForCopy = channel.CreateBasicProperties();
+            IDictionary<string, object> clone = CloneHeaders(eventArgs.BasicProperties);
+            propertiesForCopy.Headers = clone;
+            propertiesForCopy.Headers[customRetryHeaderName] = ++retryCount;
+            channel.BasicPublish(eventArgs.Exchange, eventArgs.RoutingKey, propertiesForCopy, eventArgs.Body);
+        }
+        else
+        {
+            // Se o número máximo de tentativas foi atingido, registrar o erro e descartar a mensagem
+            Console.WriteLine($"Erro ao processar mensagem: {ex.Message}");
+            channel.BasicReject(eventArgs.DeliveryTag, false); // Rejeita a mensagem
+        }
+    }
+
+    private int GetRetryCount(IBasicProperties properties, string customRetryHeaderName)
+    {
+        if (properties.Headers != null && properties.Headers.TryGetValue(customRetryHeaderName, out var value))
+        {
+            return Convert.ToInt32(value);
+        }
+        return 0;
+    }
+
+    private IDictionary<string, object> CloneHeaders(IBasicProperties basicProperties)
+    {
+        // Implementa a lógica para clonar os cabeçalhos das propriedades básicas
+        // Retorna um novo dicionário de cabeçalhos clonados
+        throw new NotImplementedException();
+    }
+
+    public void Disconnect()
+    {
+        _persistentConnection.Dispose();
     }
 }

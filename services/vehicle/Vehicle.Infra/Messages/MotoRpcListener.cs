@@ -21,6 +21,7 @@ namespace Vehicle.Infra.Messages
             _persistentConnection = persistentConnection;
             _serviceScopeFactory = factory;
         }
+
         public void Consume(string queue)
         {
             if (!_persistentConnection.IsConnected)
@@ -46,6 +47,7 @@ namespace Vehicle.Infra.Messages
                 await ReceivedEventAsync(model!, ea, channel);
             };
         }
+
         private async Task ReceivedEventAsync(object sender, BasicDeliverEventArgs ea, IModel channel)
         {
             string response = null;

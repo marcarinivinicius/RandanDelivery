@@ -44,7 +44,7 @@ namespace Vehicle.API.Middlewares
                     if (validatedToken is JwtSecurityToken jwtSecurityToken && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                     {
                         var email = principal.Identity!.Name;
-                        var user = userService.GetLoggedInUser(email!);
+                        var user = await userService.GetLoggedInUser(email!);
                         if (user != null)
                         {
                             // Crie a CustomIdentity com base nos dados obtidos do serviço externo

@@ -14,14 +14,14 @@ namespace Vehicle.Services.Service
             _rabbitMqClient = rabbitMqClient;
         }
 
-        public UserModel GetLoggedInUser(string email)
+        public async Task<UserModel> GetLoggedInUser(string email)
         {
             var userpayload = _rabbitMqClient.Call(new Request
             {
                 Method = "GetUserLogged",
                 Payload = new { Email = email }
             });
-            var userlogged = JsonConvert.DeserializeObject<UserModel>(userpayload!.Payload);
+            var userlogged = JsonConvert.DeserializeObject<UserModel>(JsonConvert.SerializeObject(userpayload!.Payload));
 
             return userlogged;
 

@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Models;
 using Vehicle.API.Middlewares;
+using Vehicle.API.Profiles;
 using Vehicle.Infra;
 using Vehicle.Services;
 
@@ -55,6 +56,7 @@ builder.Services.AddServicesModules();
 
 builder.Services.AddControllers();
 
+builder.Services.AddAutoMapper(typeof(MotoProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
