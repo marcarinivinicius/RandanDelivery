@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using Vehicle.API.Middlewares;
 using Vehicle.Infra;
 using Vehicle.Services;
 
@@ -52,7 +53,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddInfraModules();
 builder.Services.AddServicesModules();
 
-
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -71,5 +71,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseRabbitListener();
+app.UseMiddleware<ValidateAuthMiddleware>();
 
 app.Run();

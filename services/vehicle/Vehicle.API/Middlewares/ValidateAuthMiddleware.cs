@@ -10,19 +10,16 @@ namespace Vehicle.API.Middlewares
 {
     public class ValidateAuthMiddleware
     {
-
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
 
-        public ValidateAuthMiddleware(RequestDelegate next, IConfiguration configuration, IUserService userService)
+        public ValidateAuthMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
             _configuration = configuration;
-            _userService = userService;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IUserService userService)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
@@ -47,7 +44,7 @@ namespace Vehicle.API.Middlewares
                     if (validatedToken is JwtSecurityToken jwtSecurityToken && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                     {
                         var email = principal.Identity!.Name;
-                        var user = _userService.GetLoggedInUser(email!);
+                        var user = userService.GetLoggedInUser(email!);
                         if (user != null)
                         {
                             // Crie a CustomIdentity com base nos dados obtidos do serviço externo
@@ -61,7 +58,7 @@ namespace Vehicle.API.Middlewares
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return;

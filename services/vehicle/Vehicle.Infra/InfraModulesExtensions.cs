@@ -26,11 +26,12 @@ namespace Vehicle.Infra
         {
             services.AddScoped<IMotoRepository, MotoRepository>();
 
-            services.AddDbContextFactory<VehicleContext>((serviceProvider, optionsBuilder) =>
-            {
-                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-                optionsBuilder.UseNpgsql(configuration["Postgres:ConnectionString"]);
-            });
+            services.AddDbContextFactory<VehicleContext>();
+            //(serviceProvider, optionsBuilder) =>
+            //{
+            //    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            //    optionsBuilder.UseNpgsql(configuration["Postgres:ConnectionString"]);
+            //}
             return services;
         }
 

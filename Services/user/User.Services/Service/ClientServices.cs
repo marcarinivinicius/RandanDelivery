@@ -31,7 +31,8 @@ namespace User.Services.Service
             hasUser = await _userRepository.GetByCnh(client.CnhNumber);
             if (hasUser != null) throw new PersonalizeExceptions("This CNH Number is already registered");
 
-            string imageUrl = await _clientImageUploadService.UploadImageAsync("images/cnh/", $"{client.Name}-{client.CnhNumber}.png", client.CnhImage);
+            //string imageUrl = await _clientImageUploadService.UploadImageAsync("images/cnh/", $"{client.Name}-{client.CnhNumber}.png", client.CnhImage);
+            string imageUrl = client.CnhImage;
 
             var user = new Client(client.Name, client.Email, client.Password, client.CPFCnpj, client.Birth, client.CnhNumber, client.CnhType, imageUrl, client.Role);
             user.Validate();
