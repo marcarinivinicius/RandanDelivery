@@ -83,6 +83,8 @@ namespace Vehicle.Infra.Messages
                                 var filters = JsonConvert.DeserializeObject<MotoFilters>(data.Payload["Filters"].ToString());
                                 var motos = await _motoRepository.GetAll(filters);
                                 clients.AddRange(motos);
+                                break;
+                            case "GetMotoAvailable":
 
                                 break;
                         }

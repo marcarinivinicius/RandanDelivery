@@ -5,7 +5,6 @@ using Order.Infra.Interfaces;
 using Order.Infra.Models;
 using Order.Services.DTO;
 using Order.Services.Interfaces;
-using RabbitMq.Notify.Services;
 
 
 namespace Order.Services.Services
@@ -14,42 +13,60 @@ namespace Order.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
+        private readonly IUserService _userService;
+        private readonly IMotoService _motoService;
 
-        public OrderService(IMapper mapper, IOrderRepository orderRepository)
+        public OrderService(IMapper mapper, IOrderRepository orderRepository, IUserService userService, IMotoService motoService)
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
+            _userService = userService;
+            _motoService = motoService;
         }
 
-        public async Task<OrderLocationDTO> Create(OrderLocationDTO OrderLocationDTO)
+        public async Task<OrderLocationDTO> Create(OrderLocationDTO orderLocationDTO)
         {
-            //OrderFilters filters = new()
-            //{
-            //    PlateCode = OrderLocationDTO.PlateCode
-            //};
-            //var _hasMoto = await _orderRepository.GetAll(filters);
-            //if (_hasMoto != null && _hasMoto.Count() > 0) throw new PersonalizeExceptions("This vehicle is already registered");
+            var clientUser = await _userService.GetUser(orderLocationDTO.UserId);
+            if (!CnhTypeValidation(clientUser.CnhType)) throw new PersonalizeExceptions("This driver does not have a driver's license compatible with rental");
 
-            var moto = _mapper.Map<OrderLocation>(OrderLocationDTO);
-            moto.Validate();
-            var nMoto = await _orderRepository.Create(moto);
-            return _mapper.Map<OrderLocationDTO>(nMoto);
+            var motoAvalilable = _motoService.GetMotoAvailable();
+
+            if (motoAvalilable == null) throw new PersonalizeExceptions("There are no motorbikes currently available for rental");
+
+            orderLocationDTO.MotoId = motoAvalilable.Id;
+
+            var order = _mapper.Map<OrderLocation>(orderLocationDTO);
+            order.Validate();
+
+            var setLocated = _motoService.UpdateMoto(order.VehicleId, true);
+
+            if (!setLocated) throw new PersonalizeExceptions("Failed to update the vehicle, try again later");
+
+            var nOrder = await _orderRepository.Create(order);
+            return _mapper.Map<OrderLocationDTO>(nOrder);
         }
 
-        public async Task<OrderLocationDTO> Update(OrderLocationDTO OrderLocationDTO)
+        public async Task<OrderLocationDTO> Update(OrderLocationDTO orderLocationDTO)
         {
-            var _hasMoto = await _orderRepository.Get(OrderLocationDTO.Id);
-            if (_hasMoto == null) throw new PersonalizeExceptions("Vehicle not found");
-            var moto = _mapper.Map<OrderLocation>(OrderLocationDTO);
-            moto.Validate();
-            var nMoto = await _orderRepository.Update(moto);
-
-            return _mapper.Map<OrderLocationDTO>(nMoto);
+            throw new NotImplementedException();
         }
 
-        public async Task Remove(long id)
+        public async Task<OrderLocationDTO> Cancel(OrderLocationCancelDTO cancelOrderDTO)
         {
-            await _orderRepository.Delete(id);
+            if (cancelOrderDTO.DatePreview >= DateTime.Now) throw new PersonalizeExceptions("The expected end date must be greater than or equal to the current date");
+
+            var order = await _orderRepository.Get(cancelOrderDTO.Id);
+            if (order == null) throw new PersonalizeExceptions("Rental Request Id is not existing, please check and try again later");
+
+            order.CalculateFineRates(cancelOrderDTO.DatePreview);
+
+            var availableAgain = _motoService.UpdateMoto(order.VehicleId, false);
+
+            if (!availableAgain) throw new PersonalizeExceptions("Failed to update the vehicle, try again later");
+
+            var uOrder = await _orderRepository.Update(order);
+
+            return _mapper.Map<OrderLocationDTO>(uOrder);
         }
 
         public async Task<OrderLocationDTO> Get(long id)
@@ -65,5 +82,14 @@ namespace Order.Services.Services
             return _mapper.Map<List<OrderLocationDTO>>(motosDTO);
         }
 
+        #region Private
+
+        private bool CnhTypeValidation(string cnhType)
+        {
+            var list = new List<string> { "A", "AB" };
+            return list.Contains(cnhType);
+        }
+
+        #endregion
     }
 }

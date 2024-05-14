@@ -11,6 +11,7 @@ namespace Order.API.Profiles
         {
             CreateMap<CreateOrderViewModel, OrderLocationDTO>();
             CreateMap<UpdateOrderViewModel, OrderLocationDTO>();
+            CreateMap<CancelOrderViewModel, OrderLocationCancelDTO>();
         }
     }
 }

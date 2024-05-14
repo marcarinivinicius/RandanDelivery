@@ -48,7 +48,7 @@ namespace Order.API.Middlewares
                         if (user != null)
                         {
                             // Crie a CustomIdentity com base nos dados obtidos do serviço externo
-                            var customIdentity = new CustomIdentity(user.Email, user.Name, user.Role);
+                            var customIdentity = new CustomIdentity(user.Id, user.Email, user.Name, user.Role);
 
                             // Defina a identidade personalizada no contexto HTTP
                             context.User = new ClaimsPrincipal(customIdentity);

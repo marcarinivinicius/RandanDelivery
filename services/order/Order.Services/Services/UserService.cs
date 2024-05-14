@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Order.Services.DTO;
 using Order.Services.Interfaces;
-using Order.Services.Models;
 using RabbitMq.Notify.DataModels;
 using RabbitMq.Notify.Services;
 
@@ -34,9 +33,9 @@ namespace Order.Services.Services
                 Method = "GetUser",
                 Payload = new { Id = id }
             });
-            var userlogged = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
+            var user = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
 
-            return userlogged;
+            return user;
         }
 
 
