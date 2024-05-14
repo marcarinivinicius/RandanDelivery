@@ -1,25 +1,41 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["services/vehicle/Vehice.API/Vehice.API.csproj", "services/vehicle/Vehice.API/"]
-RUN dotnet restore "./services/vehicle/Vehice.API/./Vehice.API.csproj"
-COPY . .
-WORKDIR "/src/services/vehicle/Vehice.API"
-RUN dotnet build "./Vehice.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR /
+EXPOSE 80
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Vehice.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Copia a solução AlluRider.sln
+COPY AlluRider.sln .
 
-FROM base AS final
+# Copia os arquivos de projeto Vehicle
+COPY services/vehicle/Vehicle.API/Vehicle.API.csproj /services/vehicle/Vehicle.API/
+COPY services/vehicle/Vehicle.Domain/Vehicle.Domain.csproj /services/vehicle/Vehicle.Domain/
+COPY services/vehicle/Vehicle.Infra/Vehicle.Infra.csproj /services/vehicle/Vehicle.Infra/
+COPY services/vehicle/Vehicle.Services/Vehicle.Services.csproj /services/vehicle/Vehicle.Services/
+COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
+
+# Copia os arquivos de projeto User
+COPY services/user/User.API/User.API.csproj /services/user/User.API/
+COPY services/user/User.Domain/User.Domain.csproj /services/user/User.Domain/
+COPY services/user/User.Infra/User.Infra.csproj /services/user/User.Infra/
+COPY services/user/User.Services/User.Services.csproj /services/user/User.Services/
+COPY services/user/User.S3.Lib/User.S3.Lib.csproj /services/user/User.S3.Lib/
+COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
+
+# Restore package deps
+RUN dotnet restore AlluRider.sln
+
+# Copia os diretórios de cada projeto para dentro de /services/vehicle
+COPY services/vehicle/Vehicle.API/ /services/vehicle/Vehicle.API/
+COPY services/vehicle/Vehicle.Domain/ /services/vehicle/Vehicle.Domain
+COPY services/vehicle/Vehicle.Infra /services/vehicle/Vehicle.Infra
+COPY services/vehicle/Vehicle.Services /services/vehicle/Vehicle.Services
+COPY services/rabbitmq/RabbitMq.Notify /services/rabbitmq/RabbitMq.Notify
+
+
+WORKDIR "/services/vehicle/Vehicle.API"
+RUN dotnet build "./Vehicle.API.csproj" -c Release -o /app/src/out
+
+#Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Vehice.API.dll"]
+COPY --from=build /app/src/out .
+ENTRYPOINT [ "dotnet",  "Vehicle.API.dll"]
