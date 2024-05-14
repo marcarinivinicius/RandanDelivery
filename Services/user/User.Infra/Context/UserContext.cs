@@ -39,7 +39,8 @@ namespace User.Infra.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=catalog; PORT=5432";
+            var connectionString = "Host=pg_db;Username=postgres;Password=postgres;Database=catalog; PORT=5432";
+            //var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=catalog; PORT=5432";
             optionsBuilder.UseNpgsql(connectionString);
             base.OnConfiguring(optionsBuilder);
         }

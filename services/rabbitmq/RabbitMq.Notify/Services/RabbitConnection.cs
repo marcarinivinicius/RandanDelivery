@@ -1,10 +1,4 @@
-﻿using Polly.Retry;
-using RabbitMq.Notify.Interfaces;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Exceptions;
-
-using System.Net.Sockets;
+﻿using RabbitMq.Notify.Interfaces;
 
 namespace RabbitMq.Notify.Services
 {

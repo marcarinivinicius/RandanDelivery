@@ -6,10 +6,10 @@ namespace User.Services.Service
     public class RedisService : IRedisService
     {
         private readonly ConnectionMultiplexer _redis;
-
-        public RedisService(string connection)
+        public RedisService(string host, int port)
         {
-            _redis = ConnectionMultiplexer.Connect(connection);
+
+            _redis = ConnectionMultiplexer.Connect($"{host}:{port}");
         }
         public void SetValue(string key, string value, TimeSpan? expiry = null)
         {

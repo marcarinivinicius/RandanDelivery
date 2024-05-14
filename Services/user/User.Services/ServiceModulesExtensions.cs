@@ -34,9 +34,12 @@ namespace User.Services
             services.AddScoped<IRedisService, RedisService>(p =>
             {
                 var configuration = p.GetRequiredService<IConfiguration>();
-                var conn = configuration["Redis:ConnectionString"];
-
-                return new RedisService(conn!);
+                var host = configuration["Redis:HostName"];
+                var port = Convert.ToInt32(configuration["Redis:Port"]);
+                // Adiciona um log para verificar a configuração
+                Console.WriteLine($"Redis HostName: {host}");
+                Console.WriteLine($"Redis Port: {port}");
+                return new RedisService(host!, port!);
             });
             return services;
         }
