@@ -6,6 +6,7 @@ namespace Order.Services.DTO
     {
         protected OrderLocationDTO() { }
         public long Id { get; set; }
+        public long UserId { get; set; }
         public EPlansDTO Plan { get; set; }
         public DateTime DatePrev { get; set; }
     }

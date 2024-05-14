@@ -28,7 +28,6 @@ namespace Order.Domain.Entities
             CalculateRent();
         }
 
-
         public override bool Validate()
         {
             var validators = new OrderValidator();
@@ -43,7 +42,6 @@ namespace Order.Domain.Entities
             }
             return validation.IsValid;
         }
-
 
         private void CalculateRent()
         {
