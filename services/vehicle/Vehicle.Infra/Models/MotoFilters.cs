@@ -8,6 +8,7 @@ namespace Vehicle.Infra.Models
 {
     public class MotoFilters
     {
+        public long Id { get; set; }
         public string PlateCode { get; set; }
         public string Color { get; set; }
         public string Model { get; set; }
@@ -15,5 +16,7 @@ namespace Vehicle.Infra.Models
         public DateOnly Fabrication { get; set; }
         public bool Active { get; set; }
         public bool AllRecords { get; set; }
+
+        public bool Located { get; set; }
     }
 }

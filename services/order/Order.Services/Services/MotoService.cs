@@ -34,9 +34,9 @@ namespace Order.Services.Services
                 Method = "UpdateMoto",
                 Payload = new { Id = id, Located = isLocated }
             });
-            var userlogged = JsonConvert.DeserializeObject<bool>(JsonConvert.SerializeObject(response!.Payload));
+            var isUpdated = JsonConvert.DeserializeObject<dynamic>(JsonConvert.SerializeObject(response!.Payload));
 
-            return userlogged;
+            return isUpdated;
         }
     }
 }

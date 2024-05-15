@@ -66,26 +66,26 @@ namespace Order.Infra.Messages
                 {
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
-                        var _motoRepository = scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+                        var _orderRepository = scope.ServiceProvider.GetRequiredService<IOrderRepository>();
 
                         string method = data!.Method;
                         switch (method)
                         {
-                            case "GetMotoId":
-                                int motoId = data.Payload["Id"];
+                            //case "GetMotoId":
+                            //    int motoId = data.Payload["Id"];
 
-                                var moto = await _motoRepository.Get(motoId);
-                                if (moto != null)
-                                {
-                                    clients.Add(moto);
-                                }
-                                break;
-                            case "GetMotoFilter":
-                                var filters = JsonConvert.DeserializeObject<OrderFilters>(data.Payload["Filters"].ToString());
-                                var motos = await _motoRepository.GetAll(filters);
-                                clients.AddRange(motos);
+                            //    var moto = await _motoRepository.Get(motoId);
+                            //    if (moto != null)
+                            //    {
+                            //        clients.Add(moto);
+                            //    }
+                            //    break;
+                            //case "GetMotoFilter":
+                            //    var filters = JsonConvert.DeserializeObject<OrderFilters>(data.Payload["Filters"].ToString());
+                            //    var motos = await _motoRepository.GetAll(filters);
+                            //    clients.AddRange(motos);
 
-                                break;
+                            //    break;
                         }
                     }
                 }
