@@ -27,6 +27,10 @@ namespace User.Infra
 
             var userRpcListener = _serviceProvider.GetService<UserRpcListener>();
             userRpcListener?.Consume("publishUser");
+
+            // SQS
+
+
         }
 
         private static void OnApplicationStopping()

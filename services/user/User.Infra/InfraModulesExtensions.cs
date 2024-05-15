@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AWS.Notify.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMq.Notify.Interfaces;
@@ -17,7 +18,8 @@ namespace User.Infra
         public static IServiceCollection AddInfraModules(this IServiceCollection services)
         {
             services.AddDatabase();
-            services.AddServiceMessage();
+            services.AddServiceMessageRabbit();
+            services.AddServiceMessageSqs();
             return services;
         }
 
@@ -29,7 +31,7 @@ namespace User.Infra
             return services;
         }
 
-        public static IServiceCollection AddServiceMessage(this IServiceCollection services)
+        public static IServiceCollection AddServiceMessageRabbit(this IServiceCollection services)
         {
             services.AddSingleton<IRabbitConnection>(sp =>
             {
@@ -59,6 +61,13 @@ namespace User.Infra
             services.AddScoped<RabbitProducer>();
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
             services.AddSingleton<UserRpcListener>();
+            return services;
+        }
+
+        public static IServiceCollection AddServiceMessageSqs(this IServiceCollection services)
+        {
+            services.AddSingleton<ISqsConnection>();
+
             return services;
         }
 
