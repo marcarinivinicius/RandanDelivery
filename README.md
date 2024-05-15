@@ -6,9 +6,8 @@ Projeto de serviço de aluguel de motos para Delivery;
 - Design Pattern: Solid
 - Banco de dados: PostgreSQL
 - ORM: EntityFramework Core
-- Framework de Testes: XUnit
-- Framework de Mock: Moq
-- Projeto para testes de Unidade
+- Mensageria: RabbitMq e SNS/SQS
+- Framework de Testes: NUnit
 
 
 ## Dados de requisitos
@@ -48,13 +47,21 @@ Objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores
         - Para plano de 7 dias o valor da multa é de 20% sobre o valor das diárias não efetivadas.
         - Para plano de 15 dias o valor da multa é de 40% sobre o valor das diárias não efetivadas.
     - Quando a data informada for superior a data prevista do término, será cobrado um valor adicional de R$50,00 por diária adicional.
+
+
+## Serviços
+
+ - Controle de Usuários
+ - Controle de Veículos
+ - Controle de Locações
+
+### API - Usuário
+
+
+
+### API - Veículos
+
+
+
+### API - Locações
     
-
-## Diferenciais 🚀
-- Testes unitários
-- Testes de integração
-- Docker e Docker Compose
-- Documentação
-- Arquitetura e modelagem de dados
-- Logs bem estruturados
-

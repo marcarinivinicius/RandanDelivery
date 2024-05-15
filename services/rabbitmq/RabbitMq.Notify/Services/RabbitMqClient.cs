@@ -19,6 +19,7 @@ namespace RabbitMq.Notify.Services
         private readonly BlockingCollection<string> _respQueue = new BlockingCollection<string>();
         private readonly IBasicProperties _props;
         private readonly IRabbitConnection _persistentConnection;
+        private readonly EventingBasicConsumer _consumer;
 
         public RabbitMqClient(IRabbitConnection persistentConnection)
         {
@@ -32,10 +33,22 @@ namespace RabbitMq.Notify.Services
             _replyQueueName = "reply";
 
             DeclareQueue();
-
+            _consumer = new EventingBasicConsumer(_channel);
             _props = _channel.CreateBasicProperties();
-            _props.CorrelationId = Guid.NewGuid().ToString();
+            var correlationId = Guid.NewGuid().ToString();
+            _props.CorrelationId = correlationId;
             _props.ReplyTo = _replyQueueName;
+
+
+            _consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    _respQueue.Add(response);
+                }
+            };
 
             _channel.BasicAcks += (sender, ea) =>
             {
@@ -58,19 +71,19 @@ namespace RabbitMq.Notify.Services
             _channel.QueueDeclare(queue: _replyQueueName, durable: false, exclusive: false, autoDelete: false, arguments: args);
         }
 
-        public Response? Call(Request obj)
+        public Response? Call(Request obj, string queue)
         {
             var message = JsonConvert.SerializeObject(obj);
             var body = Encoding.UTF8.GetBytes(message);
 
             _channel.BasicPublish(
                exchange: "",
-               routingKey: "publish",
+               routingKey: queue,
                basicProperties: _props,
                body: body);
 
             _channel.BasicConsume(
-               consumer: new EventingBasicConsumer(_channel),
+               consumer: _consumer,
                queue: _replyQueueName,
                autoAck: true);
 

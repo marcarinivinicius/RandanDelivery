@@ -24,8 +24,9 @@ namespace User.Infra.Messages
         public void Consume(string queue)
         {
             if (!_persistentConnection.IsConnected)
+            {
                 _persistentConnection.TryConnect();
-
+            }
             var channel = _persistentConnection.CreateChannel();
 
             var args = new Dictionary<string, object> { { "x-single-active-consumer", true } };
@@ -58,20 +59,32 @@ namespace User.Infra.Messages
             {
                 var message = Encoding.UTF8.GetString(ea.Body.Span);
                 var data = JsonConvert.DeserializeObject<Request>(message);
-                List<Client> clients = new List<Client>();
-                if (ea.RoutingKey == "publish")
+                if (ea.RoutingKey == "publishUser")
                 {
+                    var dbContext = _context.CreateDbContext();
                     string method = data!.Method;
+                    List<Client> clients = new List<Client>();
                     switch (method)
                     {
                         case "GetUser":
                             int userId = data.Payload["Id"];
-                            var dbContext = _context.CreateDbContext();
                             clients = await dbContext.Clients.AsNoTracking().Where(x => x.Id == userId).ToListAsync();
+                            response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });
+                            break;
+                        case "GetUserLogged":
+                            string email = data.Payload["Email"];
+                            clients = await dbContext.Clients.AsNoTracking().Where(x => x.Email == email).ToListAsync();
+                            var client = clients.FirstOrDefault();
+                            if (client != null)
+                            {
+                                // Refatorar o Redis, mover para infra, reestruturar a conexão para buscar aqui se tem autenticação logada para esse usuário; 
+                                // devolver usuário se tiver token autenticado ainda, se não remover.
+                                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });
+                            }
                             break;
                     }
                 }
-                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });
+
             }
             catch (Exception ex)
             {
@@ -80,13 +93,20 @@ namespace User.Infra.Messages
             }
             finally
             {
-                var responseBytes = Encoding.UTF8.GetBytes(response!);
-                channel.BasicPublish(
-                    exchange: "",
-                    routingKey: props.ReplyTo,
-                    basicProperties: replyProps,
-                    body: responseBytes);
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                if (!string.IsNullOrEmpty(response))
+                {
+                    var responseBytes = Encoding.UTF8.GetBytes(response!);
+                    channel.BasicPublish(
+                        exchange: "",
+                        routingKey: props.ReplyTo,
+                        basicProperties: replyProps,
+                        body: responseBytes);
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                }
+                else
+                {
+                    channel.BasicReject(deliveryTag: ea.DeliveryTag, requeue: true);
+                }
             }
         }
 

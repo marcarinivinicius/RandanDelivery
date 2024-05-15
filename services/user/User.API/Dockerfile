@@ -5,7 +5,22 @@ EXPOSE 80
 # Copia a solução AlluRider.sln
 COPY AlluRider.sln .
 
-# Copia os arquivos de projeto
+# Copia os arquivos de projeto Order
+COPY services/order/Order.API/Order.API.csproj /services/order/Order.API/
+COPY services/order/Order.Domain/Order.Domain.csproj /services/order/Order.Domain/
+COPY services/order/Order.Infra/Order.Infra.csproj /services/order/Order.Infra/
+COPY services/order/Order.Services/Order.Services.csproj	/services/order/Order.Services/
+COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
+
+
+# Copia os arquivos de projeto Vehicle
+COPY services/vehicle/Vehicle.API/Vehicle.API.csproj /services/vehicle/Vehicle.API/
+COPY services/vehicle/Vehicle.Domain/Vehicle.Domain.csproj /services/vehicle/Vehicle.Domain/
+COPY services/vehicle/Vehicle.Infra/Vehicle.Infra.csproj /services/vehicle/Vehicle.Infra/
+COPY services/vehicle/Vehicle.Services/Vehicle.Services.csproj /services/vehicle/Vehicle.Services/
+COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
+
+# Copia os arquivos de projeto User
 COPY services/user/User.API/User.API.csproj /services/user/User.API/
 COPY services/user/User.Domain/User.Domain.csproj /services/user/User.Domain/
 COPY services/user/User.Infra/User.Infra.csproj /services/user/User.Infra/
