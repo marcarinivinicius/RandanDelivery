@@ -53,31 +53,31 @@ namespace Order.API.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("update")]
-        public async Task<IActionResult> Update([FromBody] UpdateOrderViewModel updateOrderViewModel)
-        {
+        //[HttpPut]
+        //[Route("update")]
+        //public async Task<IActionResult> Update([FromBody] UpdateOrderViewModel updateOrderViewModel)
+        //{
 
-            try
-            {
-                var orderDTO = _mapper.Map<OrderLocationDTO>(updateOrderViewModel);
-                var order = await _orderService.Update(orderDTO);
-                return Ok(new ResultModel
-                {
-                    Success = true,
-                    Message = "Order updated successfully",
-                    MetaData = order
-                });
-            }
-            catch (PersonalizeExceptions ex)
-            {
-                return BadRequest(GenericResponse.DomainError(ex.Message, ex.Err!));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, GenericResponse.GenericApplicationError(ex.Message));
-            }
-        }
+        //    try
+        //    {
+        //        var orderDTO = _mapper.Map<OrderLocationDTO>(updateOrderViewModel);
+        //        var order = await _orderService.Update(orderDTO);
+        //        return Ok(new ResultModel
+        //        {
+        //            Success = true,
+        //            Message = "Order updated successfully",
+        //            MetaData = order
+        //        });
+        //    }
+        //    catch (PersonalizeExceptions ex)
+        //    {
+        //        return BadRequest(GenericResponse.DomainError(ex.Message, ex.Err!));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, GenericResponse.GenericApplicationError(ex.Message));
+        //    }
+        //}
 
 
         [HttpPut]

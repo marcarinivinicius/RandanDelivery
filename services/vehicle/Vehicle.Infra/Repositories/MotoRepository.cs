@@ -25,10 +25,19 @@ namespace Vehicle.Infra.Repositories
                         query = query.Where(moto => moto.Active == false);
                     }
                 }
+                if (filters.AllLocated)
+                {
+                    if (filters.Located)
+                    {
+                         query = query.Where(moto => moto.Active);
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(filters.PlateCode))
                 {
                     query = query.Where(moto => moto.PlateCode.Contains(filters.PlateCode));
                 }
+                
             }
 
             var motos = await query.ToListAsync();

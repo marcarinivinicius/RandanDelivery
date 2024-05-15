@@ -20,10 +20,12 @@ namespace Order.Services
         private static IServiceCollection AddServiceScoped(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMotoService, MotoService>();
 
             //services.AddScoped<IClientServices, ClientServices>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
+            
 
             return services;
         }

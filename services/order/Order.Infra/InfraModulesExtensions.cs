@@ -9,7 +9,7 @@ using Order.Infra.Context;
 using Order.Infra.Messages;
 using Microsoft.Extensions.Configuration;
 
-namespace Vehicle.Infra
+namespace Order.Infra
 {
     public static class InfraModulesExtensions
     {

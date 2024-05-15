@@ -21,9 +21,9 @@ namespace Order.Services.Services
                 Method = "GetUserLogged",
                 Payload = new { Email = email }
             });
-            var userlogged = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
+            UserDTO userlogged = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
 
-            return userlogged;
+            return Task.FromResult(userlogged);
         }
 
         public Task<UserDTO> GetUser(long id)
@@ -35,7 +35,7 @@ namespace Order.Services.Services
             });
             var user = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
 
-            return user;
+            return Task.FromResult(user);
         }
 
 

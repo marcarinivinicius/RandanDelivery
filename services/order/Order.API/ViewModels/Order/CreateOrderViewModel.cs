@@ -5,7 +5,7 @@ namespace Order.API.ViewModels.Order
     public class CreateOrderViewModel
     {
         public EPlansDTO Plan { get; set; }
-        public DateOnly DatePrev { get; set; }
+        public DateTime DatePrev { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Order.Infra.Models;
 using Order.Services.DTO;
 using Order.Services.Interfaces;
 using RabbitMq.Notify.DataModels;
@@ -17,11 +18,22 @@ namespace Order.Services.Services
 
         public Task<MotoDTO> GetMotoAvailable()
         {
+            var filterMoto = new MotoFilters()
+            {
+                Located = false,
+                Active = true,
+                AllRecords = false,
+            };
+
             var payload = _rabbitMqClient.Call(new Request
             {
-                Method = "GetMotoAvailable",
-                Payload = { }
+                Method = "GetMotoFilter",
+                Payload = new { Filters = filterMoto }
             });
+            if (payload!.Payload == null)
+            {
+                return null;
+            }
             var userlogged = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(payload!.Payload));
 
             return userlogged;
