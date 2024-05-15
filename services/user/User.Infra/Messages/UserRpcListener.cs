@@ -24,8 +24,9 @@ namespace User.Infra.Messages
         public void Consume(string queue)
         {
             if (!_persistentConnection.IsConnected)
+            {
                 _persistentConnection.TryConnect();
-
+            }
             var channel = _persistentConnection.CreateChannel();
 
             var args = new Dictionary<string, object> { { "x-single-active-consumer", true } };
