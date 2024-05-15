@@ -6,11 +6,12 @@ namespace Order.Services.DTO
     {
         protected OrderLocationDTO() { }
         public long Id { get; set; }
-        public long UserId { get; set; }
+        public long RiderId { get; set; }
 
-        public long MotoId { get; set; }
+        public long VehicleId { get; set; }
 
         public EPlansDTO Plan { get; set; }
         public DateTime DatePrev { get; set; }
+        public decimal? FineRate { get; set; }
     }
 }

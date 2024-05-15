@@ -25,7 +25,7 @@ namespace Order.Infra
             userConsumer?.Consume("direct");
 
             var userRpcListener = _serviceProvider.GetService<OrderRpcListener>();
-            userRpcListener?.Consume("publish");
+            userRpcListener?.Consume("publishOrder");
         }
 
         private static void OnApplicationStopping()

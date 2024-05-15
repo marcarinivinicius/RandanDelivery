@@ -33,7 +33,7 @@ namespace Order.API.Controllers
             try
             {
                 var order = _mapper.Map<OrderLocationDTO>(createOrderViewModel);
-                order.UserId = customIdentity!.UserId;
+                order.RiderId = customIdentity!.UserId;
 
                 var newOrder = await _orderService.Create(order);
                 return Ok(new ResultModel

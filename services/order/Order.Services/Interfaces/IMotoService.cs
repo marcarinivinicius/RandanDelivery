@@ -5,7 +5,7 @@ namespace Order.Services.Interfaces
 {
     public interface IMotoService
     {
-        public Task<MotoDTO> GetMotoAvailable();
+        public MotoDTO GetMotoAvailable();
         public bool UpdateMoto(long id, bool located);
     }
 }

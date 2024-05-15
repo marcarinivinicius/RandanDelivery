@@ -61,7 +61,7 @@ namespace Vehicle.Infra.Messages
                 var message = Encoding.UTF8.GetString(ea.Body.Span);
                 var data = JsonConvert.DeserializeObject<Request>(message);
                 List<Moto> clients = new List<Moto>();
-                if (ea.RoutingKey == "publish")
+                if (ea.RoutingKey == "publishMoto")
                 {
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
@@ -84,11 +84,11 @@ namespace Vehicle.Infra.Messages
                             case "GetMotoFilter":
                                 var filters = JsonConvert.DeserializeObject<MotoFilters>(data.Payload["Filters"].ToString());
                                 clients = await _motoRepository.GetAll(filters);
-                                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients });
+                                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! }); ;
                                 break;
                             case "UpdateMoto":
                                 motoId = data.Payload["Id"];
-                                var isLocated = data.Payload["Located"];
+                                var isLocated = Convert.ToBoolean(data.Payload["Located"]);
 
                                 moto = await _motoRepository.Get(motoId);
 
@@ -96,7 +96,8 @@ namespace Vehicle.Infra.Messages
 
                                 var nMoto = await _motoRepository.Update(moto);
 
-                                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = new { IsUpdate = nMoto.Located == isLocated } });
+                                var ret = new { IsUpdate = nMoto.Located == isLocated };
+                                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = ret });
 
 
                                 break;
@@ -112,13 +113,20 @@ namespace Vehicle.Infra.Messages
             }
             finally
             {
-                var responseBytes = Encoding.UTF8.GetBytes(response!);
-                channel.BasicPublish(
-                    exchange: "",
-                    routingKey: props.ReplyTo,
-                    basicProperties: replyProps,
-                    body: responseBytes);
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                if (!string.IsNullOrEmpty(response))
+                {
+                    var responseBytes = Encoding.UTF8.GetBytes(response!);
+                    channel.BasicPublish(
+                        exchange: "",
+                        routingKey: props.ReplyTo,
+                        basicProperties: replyProps,
+                        body: responseBytes);
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                }
+                else
+                {
+                    channel.BasicReject(deliveryTag: ea.DeliveryTag, requeue: true);
+                }
             }
         }
 

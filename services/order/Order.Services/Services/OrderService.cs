@@ -26,14 +26,14 @@ namespace Order.Services.Services
 
         public async Task<OrderLocationDTO> Create(OrderLocationDTO orderLocationDTO)
         {
-            var clientUser = await _userService.GetUser(orderLocationDTO.UserId);
+            var clientUser = await _userService.GetUser(orderLocationDTO.RiderId);
             if (!CnhTypeValidation(clientUser.CnhType)) throw new PersonalizeExceptions("This driver does not have a driver's license compatible with rental");
 
             var motoAvalilable = _motoService.GetMotoAvailable();
 
             if (motoAvalilable == null) throw new PersonalizeExceptions("There are no motorbikes currently available for rental");
 
-            orderLocationDTO.MotoId = motoAvalilable.Id;
+            orderLocationDTO.VehicleId = motoAvalilable.Id;
 
             var order = _mapper.Map<OrderLocation>(orderLocationDTO);
             order.Validate();
@@ -41,9 +41,16 @@ namespace Order.Services.Services
             var setLocated = _motoService.UpdateMoto(order.VehicleId, true);
 
             if (!setLocated) throw new PersonalizeExceptions("Failed to update the vehicle, try again later");
-
-            var nOrder = await _orderRepository.Create(order);
-            return _mapper.Map<OrderLocationDTO>(nOrder);
+            try
+            {
+                var nOrder = await _orderRepository.Create(order);
+                return _mapper.Map<OrderLocationDTO>(nOrder);
+            }
+            catch (Exception e)
+            {
+                _motoService.UpdateMoto(order.VehicleId, false);
+                throw new PersonalizeExceptions("Errors occurred while saving the record, please try again later");
+            }
         }
 
         public async Task<OrderLocationDTO> Update(OrderLocationDTO orderLocationDTO)

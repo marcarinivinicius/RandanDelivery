@@ -16,25 +16,27 @@ namespace Order.Services.Services
             _rabbitMqClient = rabbitMqClient;
         }
 
-        public Task<MotoDTO> GetMotoAvailable()
+        public MotoDTO GetMotoAvailable()
         {
             var filterMoto = new MotoFilters()
             {
+                AllLocated = false,
                 Located = false,
-                Active = true,
                 AllRecords = false,
+                Active = true,
             };
 
             var payload = _rabbitMqClient.Call(new Request
             {
                 Method = "GetMotoFilter",
                 Payload = new { Filters = filterMoto }
-            });
+            }, "publishMoto");
+
             if (payload!.Payload == null)
             {
                 return null;
             }
-            var userlogged = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(payload!.Payload));
+            var userlogged = JsonConvert.DeserializeObject<MotoDTO>(JsonConvert.SerializeObject(payload!.Payload));
 
             return userlogged;
         }
@@ -45,8 +47,8 @@ namespace Order.Services.Services
             {
                 Method = "UpdateMoto",
                 Payload = new { Id = id, Located = isLocated }
-            });
-            var isUpdated = JsonConvert.DeserializeObject<dynamic>(JsonConvert.SerializeObject(response!.Payload));
+            }, "publishMoto");
+            var isUpdated = (bool)JsonConvert.DeserializeObject<dynamic>(JsonConvert.SerializeObject(response!.Payload)).IsUpdate;
 
             return isUpdated;
         }

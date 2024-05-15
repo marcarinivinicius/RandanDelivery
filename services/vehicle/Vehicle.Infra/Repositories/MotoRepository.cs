@@ -25,11 +25,16 @@ namespace Vehicle.Infra.Repositories
                         query = query.Where(moto => moto.Active == false);
                     }
                 }
-                if (filters.AllLocated)
+
+                if (!filters.AllLocated)
                 {
                     if (filters.Located)
                     {
-                         query = query.Where(moto => moto.Active);
+                        query = query.Where(moto => moto.Located == true);
+                    }
+                    else
+                    {
+                        query = query.Where(moto => moto.Located == false);
                     }
                 }
 
@@ -37,7 +42,7 @@ namespace Vehicle.Infra.Repositories
                 {
                     query = query.Where(moto => moto.PlateCode.Contains(filters.PlateCode));
                 }
-                
+
             }
 
             var motos = await query.ToListAsync();

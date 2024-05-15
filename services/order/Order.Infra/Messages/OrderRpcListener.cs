@@ -46,6 +46,8 @@ namespace Order.Infra.Messages
             consumer.Received += async (model, ea) =>
             {
                 await ReceivedEventAsync(model!, ea, channel);
+                // Simulação de atraso para desacelerar o consumo
+                await Task.Delay(TimeSpan.FromSeconds(5));
             };
         }
 
@@ -62,7 +64,7 @@ namespace Order.Infra.Messages
                 var message = Encoding.UTF8.GetString(ea.Body.Span);
                 var data = JsonConvert.DeserializeObject<Request>(message);
                 List<OrderLocation> clients = new List<OrderLocation>();
-                if (ea.RoutingKey == "publish")
+                if (ea.RoutingKey == "publishOrder")
                 {
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
@@ -79,17 +81,18 @@ namespace Order.Infra.Messages
                             //    {
                             //        clients.Add(moto);
                             //    }
+                            //    response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });
                             //    break;
                             //case "GetMotoFilter":
                             //    var filters = JsonConvert.DeserializeObject<OrderFilters>(data.Payload["Filters"].ToString());
                             //    var motos = await _motoRepository.GetAll(filters);
                             //    clients.AddRange(motos);
-
+                            //    response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });
                             //    break;
                         }
                     }
                 }
-                response = JsonConvert.SerializeObject(new Response() { Success = true, Payload = clients.FirstOrDefault()! });
+                
             }
             catch (Exception ex)
             {
@@ -98,13 +101,21 @@ namespace Order.Infra.Messages
             }
             finally
             {
-                var responseBytes = Encoding.UTF8.GetBytes(response!);
-                channel.BasicPublish(
-                    exchange: "",
-                    routingKey: props.ReplyTo,
-                    basicProperties: replyProps,
-                    body: responseBytes);
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                if (!string.IsNullOrEmpty(response))
+                {
+                    var responseBytes = Encoding.UTF8.GetBytes(response!);
+                    channel.BasicPublish(
+                        exchange: "",
+                        routingKey: props.ReplyTo,
+                        basicProperties: replyProps,
+                        body: responseBytes);
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                }
+                else
+                {
+                    channel.BasicReject(deliveryTag: ea.DeliveryTag, requeue: true);
+                }
+               
             }
         }
 

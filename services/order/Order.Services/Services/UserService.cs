@@ -20,7 +20,7 @@ namespace Order.Services.Services
             {
                 Method = "GetUserLogged",
                 Payload = new { Email = email }
-            });
+            }, "publishUser");
             UserDTO userlogged = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
 
             return Task.FromResult(userlogged);
@@ -32,7 +32,7 @@ namespace Order.Services.Services
             {
                 Method = "GetUser",
                 Payload = new { Id = id }
-            });
+            }, "publishUser");
             var user = JsonConvert.DeserializeObject<UserDTO>(JsonConvert.SerializeObject(userpayload!.Payload));
 
             return Task.FromResult(user);
