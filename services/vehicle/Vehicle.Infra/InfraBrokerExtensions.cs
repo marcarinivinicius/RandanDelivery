@@ -26,7 +26,7 @@ namespace Vehicle.Infra
             userConsumer?.Consume("direct");
 
             var userRpcListener = _serviceProvider.GetService<MotoRpcListener>();
-            userRpcListener?.Consume("publish");
+            userRpcListener?.Consume("publishMoto");
         }
 
         private static void OnApplicationStopping()

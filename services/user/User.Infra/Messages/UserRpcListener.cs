@@ -24,8 +24,9 @@ namespace User.Infra.Messages
         public void Consume(string queue)
         {
             if (!_persistentConnection.IsConnected)
+            {
                 _persistentConnection.TryConnect();
-
+            }
             var channel = _persistentConnection.CreateChannel();
 
             var args = new Dictionary<string, object> { { "x-single-active-consumer", true } };
@@ -58,7 +59,7 @@ namespace User.Infra.Messages
             {
                 var message = Encoding.UTF8.GetString(ea.Body.Span);
                 var data = JsonConvert.DeserializeObject<Request>(message);
-                if (ea.RoutingKey == "publish")
+                if (ea.RoutingKey == "publishUser")
                 {
                     var dbContext = _context.CreateDbContext();
                     string method = data!.Method;
@@ -92,13 +93,20 @@ namespace User.Infra.Messages
             }
             finally
             {
-                var responseBytes = Encoding.UTF8.GetBytes(response!);
-                channel.BasicPublish(
-                    exchange: "",
-                    routingKey: props.ReplyTo,
-                    basicProperties: replyProps,
-                    body: responseBytes);
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                if (!string.IsNullOrEmpty(response))
+                {
+                    var responseBytes = Encoding.UTF8.GetBytes(response!);
+                    channel.BasicPublish(
+                        exchange: "",
+                        routingKey: props.ReplyTo,
+                        basicProperties: replyProps,
+                        body: responseBytes);
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                }
+                else
+                {
+                    channel.BasicReject(deliveryTag: ea.DeliveryTag, requeue: true);
+                }
             }
         }
 

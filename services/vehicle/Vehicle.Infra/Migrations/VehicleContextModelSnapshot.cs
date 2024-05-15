@@ -44,6 +44,9 @@ namespace Vehicle.Infra.Migrations
                     b.Property<DateOnly>("Fabrication")
                         .HasColumnType("date");
 
+                    b.Property<bool>("Located")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("text");

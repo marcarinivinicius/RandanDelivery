@@ -50,6 +50,15 @@ namespace Vehicle.Services.Service
 
         public async Task Remove(long id)
         {
+            MotoFilters filters = new()
+            {
+                Id = id,
+                AllLocated = false,
+                Located = true,
+            };
+            var _hasMoto = await _motoRepository.GetAll(filters);
+            if (_hasMoto == null || _hasMoto.Count() == 0) throw new PersonalizeExceptions("It is not possible to delete a rental vehicle");
+
             await _motoRepository.Delete(id);
         }
 

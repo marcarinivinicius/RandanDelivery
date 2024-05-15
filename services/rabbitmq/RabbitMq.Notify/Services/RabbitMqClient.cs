@@ -71,14 +71,14 @@ namespace RabbitMq.Notify.Services
             _channel.QueueDeclare(queue: _replyQueueName, durable: false, exclusive: false, autoDelete: false, arguments: args);
         }
 
-        public Response? Call(Request obj)
+        public Response? Call(Request obj, string queue)
         {
             var message = JsonConvert.SerializeObject(obj);
             var body = Encoding.UTF8.GetBytes(message);
 
             _channel.BasicPublish(
                exchange: "",
-               routingKey: "publish",
+               routingKey: queue,
                basicProperties: _props,
                body: body);
 

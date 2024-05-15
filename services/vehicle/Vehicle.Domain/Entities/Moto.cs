@@ -11,6 +11,7 @@ namespace Vehicle.Domain.Entities
         public string Model { get; set; }
         public string Country { get; set; }
         public DateOnly Fabrication { get; set; }
+        public bool Located { get; set; } = false;
 
         protected Moto() { }
 

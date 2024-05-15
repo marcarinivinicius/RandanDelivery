@@ -26,7 +26,7 @@ namespace User.Infra
             userConsumer?.Consume("direct");
 
             var userRpcListener = _serviceProvider.GetService<UserRpcListener>();
-            userRpcListener?.Consume("publish");
+            userRpcListener?.Consume("publishUser");
         }
 
         private static void OnApplicationStopping()

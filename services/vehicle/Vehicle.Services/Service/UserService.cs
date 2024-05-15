@@ -20,7 +20,7 @@ namespace Vehicle.Services.Service
             {
                 Method = "GetUserLogged",
                 Payload = new { Email = email }
-            });
+            }, "publishUser");
             var userlogged = JsonConvert.DeserializeObject<UserModel>(JsonConvert.SerializeObject(userpayload!.Payload));
 
             return userlogged;
