@@ -10,7 +10,7 @@ namespace Notify.Infra.Repositories
         public async Task<List<Notification>> GetAll()
         {
             IQueryable<Notification> query = context.Notifications.AsNoTracking();
-            query = query.OrderDescending();
+            query = query.OrderByDescending(n => n.Id);
 
             var motos = await query.ToListAsync();
             return motos;
