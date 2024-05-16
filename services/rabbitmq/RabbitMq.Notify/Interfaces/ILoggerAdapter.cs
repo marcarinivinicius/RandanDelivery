@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RabbitMq.Notify.Interfaces
+﻿namespace RabbitMq.Notify.Interfaces
 {
     public interface ILoggerAdapter<T>
     {

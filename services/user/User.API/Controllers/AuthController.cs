@@ -30,7 +30,7 @@ namespace User.API.Controllers
             try
             {
                 var user = await _clientServices.GetByEmail(authModel.Login);
-                if(user == null)
+                if (user == null)
                 {
                     return BadRequest(new BaseResultModel
                     {

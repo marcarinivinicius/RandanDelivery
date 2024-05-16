@@ -1,6 +1,5 @@
 ﻿
 using AutoMapper;
-using RabbitMq.Notify.Services;
 using Vehicle.Domain.Entities;
 using Vehicle.Domain.Exceptions;
 using Vehicle.Infra.Interfaces;

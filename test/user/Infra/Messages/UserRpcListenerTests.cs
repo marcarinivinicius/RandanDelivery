@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
-using NUnit.Framework;
 using RabbitMq.Notify.Interfaces;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using User.Infra.Context;
 using User.Infra.Messages;
 
@@ -51,7 +45,7 @@ namespace UserTest.Infra.Messages
             persistentConnectionMock.Verify(p => p.TryConnect(), Times.Once);
             // Verifica se o método CreateChannel foi chamado
             persistentConnectionMock.Verify(p => p.CreateChannel(), Times.Once);
-           
+
         }
 
 

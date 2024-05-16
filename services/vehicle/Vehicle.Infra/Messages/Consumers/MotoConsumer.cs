@@ -1,11 +1,8 @@
-﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+﻿using Newtonsoft.Json;
 using RabbitMq.Notify.Interfaces;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
 
 public class MotoConsumer
 {

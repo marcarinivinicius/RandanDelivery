@@ -1,14 +1,13 @@
 ﻿using System.Security.Claims;
 using User.API.Interfaces.Auth;
 using User.API.ViewModels;
-using User.Services.Interfaces;
 using User.Services.Models;
 
 namespace User.Services.Service
 {
     public class JwtService : IJwtService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor; 
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
         public JwtService(IHttpContextAccessor httpContextAccessor)

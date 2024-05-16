@@ -13,7 +13,7 @@ namespace User.API.Utils
                 MetaData = data
             };
         }
-        
+
         public static BaseResultModel DomainError(string message, IReadOnlyCollection<string> errors)
         {
             return new BaseResultModel

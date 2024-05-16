@@ -1,10 +1,10 @@
 ﻿
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using User.Infra.Repositories;
 using User.Infra.Interfaces;
+using User.Infra.Repositories;
 using User.Services.Interfaces;
 using User.Services.Service;
-using Microsoft.Extensions.Configuration;
 
 namespace User.Services
 {

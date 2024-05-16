@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Order.Domain.Entities;
 using Order.Services.DTO;
-using System;
 
 namespace Order.Services.Profiles
 {

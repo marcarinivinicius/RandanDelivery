@@ -1,8 +1,6 @@
 ﻿using AWS.Notify.DataModels;
 using AWS.Notify.Utils;
 using Newtonsoft.Json;
-using RabbitMq.Notify.DataModels;
-using System.Text.Json.Nodes;
 using Vehicle.Services.DTO;
 using Vehicle.Services.Interfaces;
 

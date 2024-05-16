@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using User.Domain.Entities;
 using User.Infra.Context;
 using User.Infra.Interfaces;
@@ -41,6 +36,6 @@ namespace User.Infra.Repositories
             var user = await _context.Clients.Where(x => x.Email.ToLower() == email.ToLower()).AsNoTracking().ToListAsync();
             return user.FirstOrDefault()!;
         }
-       
+
     }
 }

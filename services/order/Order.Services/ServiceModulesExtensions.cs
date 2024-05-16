@@ -25,7 +25,7 @@ namespace Order.Services
             //services.AddScoped<IClientServices, ClientServices>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
-            
+
 
             return services;
         }

@@ -1,6 +1,4 @@
-﻿using Order.Services.EnumsDTO;
-
-namespace Order.API.ViewModels.Order
+﻿namespace Order.API.ViewModels.Order
 {
     public class CancelOrderViewModel
     {

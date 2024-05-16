@@ -1,8 +1,8 @@
-﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using Newtonsoft.Json;
-using System.Text;
+﻿using Newtonsoft.Json;
 using RabbitMq.Notify.Interfaces;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
 
 public class OrderConsumer
 {

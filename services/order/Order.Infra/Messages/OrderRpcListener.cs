@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Order.Domain.Entities;
 using Order.Infra.Interfaces;
-using Order.Infra.Models;
 using RabbitMq.Notify.DataModels;
 using RabbitMq.Notify.Interfaces;
 using RabbitMQ.Client;
@@ -92,7 +91,7 @@ namespace Order.Infra.Messages
                         }
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -115,7 +114,7 @@ namespace Order.Infra.Messages
                 {
                     channel.BasicReject(deliveryTag: ea.DeliveryTag, requeue: true);
                 }
-               
+
             }
         }
 

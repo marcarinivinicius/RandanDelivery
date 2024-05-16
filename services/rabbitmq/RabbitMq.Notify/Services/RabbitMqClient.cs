@@ -1,14 +1,10 @@
-﻿using RabbitMQ.Client.Events;
-using RabbitMQ.Client;
+﻿using Newtonsoft.Json;
 using RabbitMq.Notify.DataModels;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RabbitMq.Notify.Interfaces;
-using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Collections.Concurrent;
+using System.Text;
 
 namespace RabbitMq.Notify.Services
 {

@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RabbitMq.Notify.Interfaces;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RabbitMq.Notify.Utils;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
 
 namespace User.Infra.Messages.Consumers
 {

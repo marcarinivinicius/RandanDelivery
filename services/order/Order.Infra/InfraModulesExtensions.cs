@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Order.Infra.Context;
+using Order.Infra.Interfaces;
+using Order.Infra.Messages;
+using Order.Infra.Repositories;
 using RabbitMq.Notify.Interfaces;
 using RabbitMq.Notify.Services;
-using RabbitMQ.Client;
 using RabbitMq.Notify.Services.RabbitMq.Notify.Services;
-using Order.Infra.Interfaces;
-using Order.Infra.Repositories;
-using Order.Infra.Context;
-using Order.Infra.Messages;
-using Microsoft.Extensions.Configuration;
+using RabbitMQ.Client;
 
 namespace Order.Infra
 {

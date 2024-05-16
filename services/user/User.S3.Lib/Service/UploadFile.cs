@@ -1,6 +1,6 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Amazon.S3.Model;
-using Amazon;
 using System.Net;
 
 namespace User.S3.Lib.Service

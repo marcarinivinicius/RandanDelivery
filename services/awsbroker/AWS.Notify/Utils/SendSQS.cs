@@ -1,6 +1,4 @@
-﻿using Amazon;
-using Amazon.Runtime;
-using Amazon.SQS;
+﻿using Amazon.SQS;
 using Amazon.SQS.Model;
 using AWS.Notify.DataModels;
 using AWS.Notify.Interfaces;

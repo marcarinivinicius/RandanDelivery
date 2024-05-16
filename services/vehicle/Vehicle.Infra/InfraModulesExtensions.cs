@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Amazon.Runtime;
+using AWS.Notify.Interfaces;
+using AWS.Notify.Services;
+using AWS.Notify.Utils;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMq.Notify.Interfaces;
 using RabbitMq.Notify.Services;
-using RabbitMQ.Client;
 using RabbitMq.Notify.Services.RabbitMq.Notify.Services;
+using RabbitMQ.Client;
 using Vehicle.Infra.Context;
 using Vehicle.Infra.Interfaces;
 using Vehicle.Infra.Messages;
 using Vehicle.Infra.Repositories;
-using AWS.Notify.Interfaces;
-using Amazon.Runtime;
-using AWS.Notify.Services;
-using AWS.Notify.Utils;
 
 namespace Vehicle.Infra
 {

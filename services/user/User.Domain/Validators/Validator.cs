@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using System.Text.RegularExpressions;
 using User.Domain.Entities;
-using static User.Domain.Entities.Client;
 
 namespace User.Domain.Validators
 {
@@ -57,7 +56,7 @@ namespace User.Domain.Validators
             return list.Contains(cnhType);
         }
 
-       
+
 
         private bool CpfCnpjValidation(string cpfcnpj)
         {

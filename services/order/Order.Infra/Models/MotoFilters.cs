@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Order.Infra.Models
+﻿namespace Order.Infra.Models
 {
     public class MotoFilters
     {
@@ -16,7 +10,7 @@ namespace Order.Infra.Models
         public DateOnly Fabrication { get; set; }
         public bool Active { get; set; }
         public bool AllRecords { get; set; }
-        
+
         public bool AllLocated { get; set; }
         public bool Located { get; set; }
     }

@@ -1,8 +1,8 @@
 using Microsoft.OpenApi.Models;
-using Order.Services;
-using Order.Infra;
 using Order.API.Middlewares;
 using Order.API.Profiles;
+using Order.Infra;
+using Order.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);

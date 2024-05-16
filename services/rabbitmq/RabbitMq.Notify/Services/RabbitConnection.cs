@@ -2,13 +2,13 @@
 
 namespace RabbitMq.Notify.Services
 {
-    using System;
-    using System.Net.Sockets;
     using Polly;
     using Polly.Retry;
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
     using RabbitMQ.Client.Exceptions;
+    using System;
+    using System.Net.Sockets;
 
     namespace RabbitMq.Notify.Services
     {
