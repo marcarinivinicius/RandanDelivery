@@ -55,7 +55,7 @@ Este repositório é o Back-End de um sistema desenvolvido como desafio técnico
 
 # Utilização dos sistemas localmente com Docker 
 
-## Pré-requisitos
+### Pré-requisitos
 
  - Docker;
  - Docker Compose;
@@ -66,11 +66,6 @@ Este repositório é o Back-End de um sistema desenvolvido como desafio técnico
  - Controle de Veículos
  - Controle de Locações
  - Visualização de Notificações
-
- ### Modo de Uso 
-
- Obrigatório criar um cadastro de usuário no serviço de usuário para conseguir trabalhar nos demais serviços. 
-
  
  ### API - Usuário
  ```
