@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMq.Notify.Interfaces;
 using RabbitMq.Notify.Services;
@@ -17,7 +16,7 @@ namespace User.Infra
         public static IServiceCollection AddInfraModules(this IServiceCollection services)
         {
             services.AddDatabase();
-            services.AddServiceMessage();
+            services.AddServiceMessageRabbit();
             return services;
         }
 
@@ -29,7 +28,7 @@ namespace User.Infra
             return services;
         }
 
-        public static IServiceCollection AddServiceMessage(this IServiceCollection services)
+        public static IServiceCollection AddServiceMessageRabbit(this IServiceCollection services)
         {
             services.AddSingleton<IRabbitConnection>(sp =>
             {
@@ -61,6 +60,5 @@ namespace User.Infra
             services.AddSingleton<UserRpcListener>();
             return services;
         }
-
     }
 }

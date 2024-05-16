@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vehicle.Services", "Vehicle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMq.Notify", "..\rabbitmq\RabbitMq.Notify\RabbitMq.Notify.csproj", "{9281D1AD-7DCF-40FF-9697-4F4431BBEBB5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.Notify", "..\awsbroker\AWS.Notify\AWS.Notify.csproj", "{7C98B38A-C46E-4064-BA00-346EC6DF90CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9281D1AD-7DCF-40FF-9697-4F4431BBEBB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9281D1AD-7DCF-40FF-9697-4F4431BBEBB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9281D1AD-7DCF-40FF-9697-4F4431BBEBB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C98B38A-C46E-4064-BA00-346EC6DF90CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C98B38A-C46E-4064-BA00-346EC6DF90CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C98B38A-C46E-4064-BA00-346EC6DF90CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C98B38A-C46E-4064-BA00-346EC6DF90CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

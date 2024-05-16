@@ -71,8 +71,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.UseRabbitListener();
 app.UseMiddleware<ValidateAuthMiddleware>();
-
 app.Run();

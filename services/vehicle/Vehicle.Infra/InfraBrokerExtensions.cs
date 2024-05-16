@@ -15,11 +15,11 @@ namespace Vehicle.Infra
             _serviceProvider = app.ApplicationServices;
 
             var lifetime = _serviceProvider.GetService<IHostApplicationLifetime>();
-            lifetime?.ApplicationStarted.Register(OnApplicationStarted);
-            lifetime?.ApplicationStopping.Register(OnApplicationStopping);
+            lifetime?.ApplicationStarted.Register(OnApplicationStartedRabbit);
+            lifetime?.ApplicationStopping.Register(OnApplicationStoppingRabbit);
         }
 
-        private static void OnApplicationStarted()
+        private static void OnApplicationStartedRabbit()
         {
             // Inicia o consumo das filas ao iniciar a aplicação
             var userConsumer = _serviceProvider.GetService<MotoConsumer>();
@@ -29,9 +29,10 @@ namespace Vehicle.Infra
             userRpcListener?.Consume("publishMoto");
         }
 
-        private static void OnApplicationStopping()
+        private static void OnApplicationStoppingRabbit()
         {
             // Executa ações ao parar a aplicação, se necessário
         }
+
     }
 }
