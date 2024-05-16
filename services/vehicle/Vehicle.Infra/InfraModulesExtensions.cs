@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using RabbitMq.Notify.Interfaces;
 using RabbitMq.Notify.Services;
 using RabbitMQ.Client;
 using RabbitMq.Notify.Services.RabbitMq.Notify.Services;
-using System;
 using Vehicle.Infra.Context;
 using Vehicle.Infra.Interfaces;
 using Vehicle.Infra.Messages;
 using Vehicle.Infra.Repositories;
+using AWS.Notify.Interfaces;
+using Amazon.Runtime;
+using AWS.Notify.Services;
 
 namespace Vehicle.Infra
 {
@@ -19,7 +19,8 @@ namespace Vehicle.Infra
         public static IServiceCollection AddInfraModules(this IServiceCollection services)
         {
             services.AddDatabaseContext();
-            services.AddServiceMessage();
+            services.AddServiceMessageRabbit();
+            services.AddServiceMessageSqs();
             return services;
         }
         private static IServiceCollection AddDatabaseContext(this IServiceCollection services)
@@ -35,7 +36,7 @@ namespace Vehicle.Infra
             return services;
         }
 
-        private static IServiceCollection AddServiceMessage(this IServiceCollection services)
+        private static IServiceCollection AddServiceMessageRabbit(this IServiceCollection services)
         {
             services.AddSingleton<IRabbitConnection>(sp =>
             {
@@ -66,6 +67,32 @@ namespace Vehicle.Infra
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
             services.AddSingleton<RabbitMqClient>();
             services.AddSingleton<MotoRpcListener>();
+            return services;
+        }
+
+        public static IServiceCollection AddServiceMessageSqs(this IServiceCollection services)
+        {
+
+            services.AddSingleton<ISqsConnection>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var accessKey = "";
+                var secretKey = "";
+                var region = "";
+
+                if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:accessKey"]))
+                    accessKey = configuration["AwsNotify:accessKey"];
+                if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:secretKey"]))
+                    secretKey = configuration["AwsNotify:secretKey"];
+                if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:region"]))
+                    region = configuration["AwsNotify:region"];
+
+                var credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+                return new SqsConnection(credentials, region);
+            });
+
+
             return services;
         }
     }

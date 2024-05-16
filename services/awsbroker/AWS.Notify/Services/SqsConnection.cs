@@ -10,9 +10,8 @@ namespace AWS.Notify.Services
     {
         private readonly IAmazonSQS _sqsClient;
 
-        public SqsConnection(string accessKey, string secretKey, string region)
+        public SqsConnection(BasicAWSCredentials credentials, string region)
         {
-            var credentials = new BasicAWSCredentials(accessKey, secretKey);
             _sqsClient = new AmazonSQSClient(credentials, RegionEndpoint.GetBySystemName(region));
         }
 

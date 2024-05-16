@@ -1,17 +1,29 @@
-﻿using Newtonsoft.Json;
+﻿using Amazon.SQS;
+using Amazon.SQS.Model;
+using AWS.Notify.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using RabbitMq.Notify.DataModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Vehicle.Domain.Entities;
+using Vehicle.Infra.Interfaces;
+using Vehicle.Infra.Models;
+using Amazon.SimpleNotificationService.Util;
 
-namespace User.Infra.Messages
+namespace Vehicle.Infra.Messages
 {
     public class SqsConsumer
     {
         private readonly IAmazonSQS _sqsClient;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public SqsConsumer(IAmazonSQS sqsClient)
+        public SqsConsumer(ISqsConnection sqsConnection, IServiceScopeFactory factory)
         {
-            _sqsClient = sqsClient;
+            _sqsClient = sqsConnection.Client;
+            _serviceScopeFactory = factory;
         }
 
-        public async Task Consume(string queueName, string queueUrl)
+        public async Task Consume(string queueUrl)
         {
             var request = new ReceiveMessageRequest
             {
@@ -37,11 +49,25 @@ namespace User.Infra.Messages
 
         private async Task ProcessMessageAsync(string messageBody)
         {
-            // Deserialize message body
-            var messageObject = JsonConvert.DeserializeObject<dynamic>(messageBody);
-            // Process the message as needed
-            Console.WriteLine("Received message: " + messageObject);
-            // Example: You can put your database communication logic here
+            var data = JsonConvert.DeserializeObject<Request>(messageBody);
+
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var _motoRepository = scope.ServiceProvider.GetRequiredService<IMotoRepository>();
+
+                string method = data!.Method;
+
+                switch (method)
+                {
+                    case "fyFabrication":
+
+
+                        break;
+                }
+
+            }
+
+
         }
 
         private async Task DeleteMessageAsync(string queueUrl, string receiptHandle)

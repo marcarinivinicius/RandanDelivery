@@ -1,22 +1,18 @@
 using Microsoft.OpenApi.Models;
-using Vehicle.API.Middlewares;
-using Vehicle.API.Profiles;
-using Vehicle.Infra;
-using Vehicle.Services;
-
+using Notify.Infra;
+using Notify.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "RandanDelivery Vehicle API",
+        Title = "RandanDelivery Notify API",
         Version = "v1",
         Description = "This API is builded for challenge in the other Company",
         Contact = new OpenApiContact
@@ -55,8 +51,6 @@ builder.Services.AddInfraModules();
 builder.Services.AddServicesModules();
 
 builder.Services.AddControllers();
-
-builder.Services.AddAutoMapper(typeof(MotoProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -71,11 +65,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseRabbitListener();
-
 app.UseAWSListener();
-
-app.UseMiddleware<ValidateAuthMiddleware>();
-
 app.Run();
