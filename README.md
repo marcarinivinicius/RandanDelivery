@@ -1,5 +1,5 @@
 # Randan Delivery
-Projeto de serviço de aluguel de motos para Delivery;
+Este repositório é o Back-End de um sistema desenvolvido como desafio técnico para vaga de desenvolvedor Back-End.
 
 # Detalhes do Projeto 
 - .NET 8
@@ -11,8 +11,12 @@ Projeto de serviço de aluguel de motos para Delivery;
 - Framework de Testes: NUnit, Mock
 
 
-# Dados de requisitos
-Objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
+# Sobre o Projeto
+ - Fornece Endpoints com as operações.
+ - Armazenamento dos dados no PostgreSQL.
+ - Armazenamento de cache de autenticações via Redis.
+ - Armazenamento de arquivos em um Bucket S3 da AWS.
+ - Serviço de Mensageria via RabbitMq e Aws SQS. 
 
 ### Casos de uso
 - Eu como usuário admin quero cadastrar uma nova moto.
@@ -51,7 +55,7 @@ Objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores
 
 # Utilização dos sistemas localmente com Docker 
 
-## Pré-requisitos
+### Pré-requisitos
 
  - Docker;
  - Docker Compose;
@@ -62,11 +66,6 @@ Objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores
  - Controle de Veículos
  - Controle de Locações
  - Visualização de Notificações
-
- ### Modo de Uso 
-
- Obrigatório criar um cadastro de usuário no serviço de usuário para conseguir trabalhar nos demais serviços. 
-
  
  ### API - Usuário
  ```
