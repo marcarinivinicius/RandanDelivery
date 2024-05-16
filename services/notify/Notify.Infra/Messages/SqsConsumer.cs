@@ -1,73 +1,92 @@
 ﻿using Amazon.SQS;
 using Amazon.SQS.Model;
+using AWS.Notify.DataModels;
 using AWS.Notify.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Notify.Domain.Entities;
 using Notify.Infra.Interfaces;
-using RabbitMq.Notify.DataModels;
 
 namespace Vehicle.Infra.Messages
 {
     public class SqsConsumer
     {
         private readonly IAmazonSQS _sqsClient;
+        private readonly string _urlQueue;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public SqsConsumer(ISqsConnection sqsConnection, IServiceScopeFactory factory)
         {
             _sqsClient = sqsConnection.Client;
+            _urlQueue = sqsConnection.UrlQueue;
             _serviceScopeFactory = factory;
         }
 
-        public async Task Consume(string queueUrl)
+        public async Task Consume(string queue, CancellationToken cancellationToken)
         {
-            var request = new ReceiveMessageRequest
+
+            while (!cancellationToken.IsCancellationRequested)
             {
-                QueueUrl = queueUrl,
-                MaxNumberOfMessages = 1, // Max number of messages to retrieve at once
-                WaitTimeSeconds = 20 // Long polling timeout (in seconds)
-            };
 
-            var response = await _sqsClient.ReceiveMessageAsync(request);
+                var request = new ReceiveMessageRequest
+                {
+                    QueueUrl = $"{_urlQueue}/{queue}",
+                    MaxNumberOfMessages = 1, // Max number of messages to retrieve at once
+                    WaitTimeSeconds = 20 // Long polling timeout (in seconds)
+                };
 
-            foreach (var message in response.Messages)
-            {
-                var messageBody = message.Body;
-                var messageReceiptHandle = message.ReceiptHandle;
+                var response = await _sqsClient.ReceiveMessageAsync(request);
 
-                // Process message
-                await ProcessMessageAsync(messageBody);
+                foreach (var message in response.Messages)
+                {
+                    var messageBody = message.Body;
+                    var messageReceiptHandle = message.ReceiptHandle;
 
-                // Delete message from the queue
-                await DeleteMessageAsync(queueUrl, messageReceiptHandle);
+                    // Process message
+                    await ProcessMessageAsync(messageBody);
+
+                    // Delete message from the queue
+                    await DeleteMessageAsync($"{_urlQueue}/{queue}", messageReceiptHandle, cancellationToken);
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
             }
         }
 
         private async Task ProcessMessageAsync(string messageBody)
         {
-            var data = JsonConvert.DeserializeObject<Request>(messageBody);
-
-            using (var scope = _serviceScopeFactory.CreateScope())
+            try
             {
-                var _notificationrepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
+                var data = JsonConvert.DeserializeObject<RequestAws>(messageBody);
 
-                string method = data!.Method;
-
-                switch (method)
+                using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    case "fyFabrication":
-                        var notify = new Notification(data.Payload);
-                        await _notificationrepository.Create(notify);
-                        break;
+                    var _notificationrepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
+
+                    string method = data!.Method;
+
+                    switch (method)
+                    {
+                        case "fyFabrication":
+                            var notify = new Notification(data.Payload);
+                            await _notificationrepository.Create(notify);
+                            break;
+                    }
+
                 }
+            }
+            catch (JsonException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
 
             }
 
-
         }
 
-        private async Task DeleteMessageAsync(string queueUrl, string receiptHandle)
+        private async Task DeleteMessageAsync(string queueUrl, string receiptHandle, CancellationToken cancellationToken)
         {
             var request = new DeleteMessageRequest
             {
@@ -75,7 +94,7 @@ namespace Vehicle.Infra.Messages
                 ReceiptHandle = receiptHandle
             };
 
-            await _sqsClient.DeleteMessageAsync(request);
+            await _sqsClient.DeleteMessageAsync(request, cancellationToken);
             Console.WriteLine("Message deleted from queue.");
         }
     }

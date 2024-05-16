@@ -34,25 +34,5 @@ namespace Vehicle.Infra
             // Executa ações ao parar a aplicação, se necessário
         }
 
-
-        public static void UseAWSListener(this IApplicationBuilder app)
-        {
-            _serviceProvider = app.ApplicationServices;
-
-            var lifetime = _serviceProvider.GetService<IHostApplicationLifetime>();
-            lifetime?.ApplicationStarted.Register(OnApplicationStartedAWS);
-            lifetime?.ApplicationStopping.Register(OnApplicationStoppingAWS);
-        }
-
-        private static void OnApplicationStartedAWS()
-        {
-            var usersqsListener = _serviceProvider.GetService<SqsConsumer>();
-            usersqsListener?.Consume("fyMoto");
-        }
-
-        private static void OnApplicationStoppingAWS()
-        {
-            // Executa ações ao parar a aplicação, se necessário
-        }
     }
 }

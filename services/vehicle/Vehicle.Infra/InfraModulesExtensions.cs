@@ -11,6 +11,7 @@ using Vehicle.Infra.Repositories;
 using AWS.Notify.Interfaces;
 using Amazon.Runtime;
 using AWS.Notify.Services;
+using AWS.Notify.Utils;
 
 namespace Vehicle.Infra
 {
@@ -79,6 +80,7 @@ namespace Vehicle.Infra
                 var accessKey = "";
                 var secretKey = "";
                 var region = "";
+                var urlQueue = "";
 
                 if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:accessKey"]))
                     accessKey = configuration["AwsNotify:accessKey"];
@@ -86,13 +88,21 @@ namespace Vehicle.Infra
                     secretKey = configuration["AwsNotify:secretKey"];
                 if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:region"]))
                     region = configuration["AwsNotify:region"];
+                if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:urlQueue"]))
+                {
+                    urlQueue = configuration["AwsNotify:urlQueue"];
+
+                    if (urlQueue!.EndsWith("/"))
+                    {
+                        urlQueue = urlQueue.Substring(0, urlQueue.Length - 1);
+                    }
+                }
 
                 var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
-                return new SqsConnection(credentials, region);
+                return new SqsConnection(credentials, region!, urlQueue);
             });
-
-
+            services.AddSingleton<SendSQS>();
             return services;
         }
     }

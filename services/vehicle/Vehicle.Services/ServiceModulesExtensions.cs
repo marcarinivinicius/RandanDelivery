@@ -20,8 +20,8 @@ namespace Vehicle.Services
         private static IServiceCollection AddServiceScoped(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
-            //services.AddScoped<IClientServices, ClientServices>();
             services.AddScoped<IMotoRepository, MotoRepository>();
             services.AddScoped<IMotoService, MotoService>();
 

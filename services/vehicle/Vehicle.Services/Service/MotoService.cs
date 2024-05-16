@@ -14,12 +14,12 @@ namespace Vehicle.Services.Service
     {
         private readonly IMapper _mapper;
         private readonly IMotoRepository _motoRepository;
-        private readonly RabbitMqClient _rabbitMqClient;
-        public MotoService(IMapper mapper, IMotoRepository motoRepository, RabbitMqClient rabbitMqClient)
+        private readonly INotificationService _notificationService;
+        public MotoService(IMapper mapper, IMotoRepository motoRepository, INotificationService notificationService)
         {
             _mapper = mapper;
             _motoRepository = motoRepository;
-            _rabbitMqClient = rabbitMqClient;
+            _notificationService = notificationService;
         }
 
         public async Task<MotoDTO> Create(MotoDTO motoDTO)
@@ -34,7 +34,14 @@ namespace Vehicle.Services.Service
             var moto = _mapper.Map<Moto>(motoDTO);
             moto.Validate();
             var nMoto = await _motoRepository.Create(moto);
-            return _mapper.Map<MotoDTO>(nMoto);
+
+            var nmotoDTO = _mapper.Map<MotoDTO>(nMoto);
+
+            if (nmotoDTO.Fabrication.Year == 2024)
+            {
+                await _notificationService.SendNewMoto(motoDTO);
+            }
+            return nmotoDTO;
         }
 
         public async Task<MotoDTO> Update(MotoDTO motoDTO)

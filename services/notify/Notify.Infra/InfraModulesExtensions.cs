@@ -3,9 +3,11 @@ using AWS.Notify.Interfaces;
 using AWS.Notify.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Notify.Infra.Context;
 using Notify.Infra.Interfaces;
 using Notify.Infra.Repositories;
+using Vehicle.Infra.Messages;
 
 namespace Notify.Infra
 {
@@ -39,6 +41,7 @@ namespace Notify.Infra
                 var accessKey = "";
                 var secretKey = "";
                 var region = "";
+                var urlQueue = "";
 
                 if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:accessKey"]))
                     accessKey = configuration["AwsNotify:accessKey"];
@@ -46,12 +49,22 @@ namespace Notify.Infra
                     secretKey = configuration["AwsNotify:secretKey"];
                 if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:region"]))
                     region = configuration["AwsNotify:region"];
+                if (!string.IsNullOrWhiteSpace(configuration["AwsNotify:urlQueue"]))
+                {
+                    urlQueue = configuration["AwsNotify:urlQueue"];
+
+                    if (urlQueue!.EndsWith("/"))
+                    {
+                        urlQueue = urlQueue.Substring(0, urlQueue.Length - 1);
+                    }
+                }
+
 
                 var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
-                return new SqsConnection(credentials, region);
+                return new SqsConnection(credentials, region, urlQueue);
             });
-
+            services.AddSingleton<SqsConsumer>();
 
             return services;
         }

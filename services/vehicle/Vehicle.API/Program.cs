@@ -72,6 +72,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseRabbitListener();
-app.UseAWSListener();
 app.UseMiddleware<ValidateAuthMiddleware>();
 app.Run();

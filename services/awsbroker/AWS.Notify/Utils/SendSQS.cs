@@ -2,32 +2,31 @@
 using Amazon.Runtime;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using AWS.Notify.Enums;
+using AWS.Notify.DataModels;
 using AWS.Notify.Interfaces;
 using Newtonsoft.Json;
 
 namespace AWS.Notify.Utils
 {
-    public class SendSQS<T> : IQueueSQS<T>
+    public class SendSQS : IQueueSQS
     {
-        private readonly AmazonSQSClient _client;
-        private readonly string _queueUrl;
+        private readonly IAmazonSQS _client;
+        private readonly string _urlQueue;
 
-        public SendSQS(AWSCredentials credentials, string queueUrl)
+        public SendSQS(ISqsConnection sqsConnection)
         {
-            // Aqui você pode inicializar o cliente AmazonSQSClient
-            _client = new AmazonSQSClient(credentials, RegionEndpoint.SAEast1);
-            _queueUrl = queueUrl;
+            _client = sqsConnection.Client;
+            _urlQueue = sqsConnection.UrlQueue;
         }
 
-        public async Task Send(EnumQueueSQS queue, T message)
+        public async Task Send(RequestAws obj, string queue)
         {
-            var json = JsonConvert.SerializeObject(message);
+            var message = JsonConvert.SerializeObject(obj);
 
             var request = new SendMessageRequest
             {
-                QueueUrl = _queueUrl,
-                MessageBody = json
+                QueueUrl = $"{_urlQueue}/{queue}",
+                MessageBody = message
             };
 
             await _client.SendMessageAsync(request);

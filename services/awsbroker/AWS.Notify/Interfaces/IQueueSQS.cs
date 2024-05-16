@@ -1,9 +1,10 @@
-﻿using AWS.Notify.Enums;
+﻿
+using AWS.Notify.DataModels;
 
 namespace AWS.Notify.Interfaces
 {
-    public interface IQueueSQS<T>
+    public interface IQueueSQS
     {
-        Task Send(EnumQueueSQS queue, T message);
+        Task Send(RequestAws obj, string queue);
     }
 }

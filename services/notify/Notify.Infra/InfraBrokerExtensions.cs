@@ -21,8 +21,10 @@ namespace Notify.Infra
 
         private static void OnApplicationStartedAWS()
         {
+            var cancellationToken = _serviceProvider.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
+
             var usersqsListener = _serviceProvider.GetService<SqsConsumer>();
-            usersqsListener?.Consume("notify");
+            usersqsListener?.Consume("notify", cancellationToken);
         }
 
         private static void OnApplicationStoppingAWS()

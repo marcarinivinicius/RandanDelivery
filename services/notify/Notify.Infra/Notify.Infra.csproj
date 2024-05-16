@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\awsbroker\AWS.Notify\AWS.Notify.csproj" />
-    <ProjectReference Include="..\..\rabbitmq\RabbitMq.Notify\RabbitMq.Notify.csproj" />
     <ProjectReference Include="..\Notify.Domain\Notify.Domain.csproj" />
   </ItemGroup>
 
