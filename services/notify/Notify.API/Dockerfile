@@ -5,11 +5,18 @@ EXPOSE 80
 # Copia a solução AlluRider.sln
 COPY AlluRider.sln .
 
+# Copia os arquivos de projeto Notify
+COPY services/notify/Notify.API/Notify.API.csproj /services/notify/Notify.API/
+COPY services/notify/Notify.Domain/Notify.Domain.csproj /services/notify/Notify.Domain/
+COPY services/notify/Notify.Infra/Notify.Infra.csproj /services/notify/Notify.Infra/
+COPY services/notify/Notify.Services/Notify.Services.csproj	/services/notify/Notify.Services/
+COPY services/awsbroker/AWS.Notify/AWS.Notify.csproj /services/awsbroker/AWS.Notify/
+
 # Copia os arquivos de projeto Order
 COPY services/order/Order.API/Order.API.csproj /services/order/Order.API/
 COPY services/order/Order.Domain/Order.Domain.csproj /services/order/Order.Domain/
 COPY services/order/Order.Infra/Order.Infra.csproj /services/order/Order.Infra/
-COPY services/order/Order.Services/Order.Services.csproj	/services/order/Order.Services/
+COPY services/order/Order.Services/Order.Services.csproj /services/order/Order.Services/
 COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
 
 # Copia os arquivos de projeto Vehicle
@@ -27,23 +34,25 @@ COPY services/user/User.Services/User.Services.csproj /services/user/User.Servic
 COPY services/user/User.S3.Lib/User.S3.Lib.csproj /services/user/User.S3.Lib/
 COPY services/rabbitmq/RabbitMq.Notify/RabbitMq.Notify.csproj /services/rabbitmq/RabbitMq.Notify/
 
+# Copia os arquivos de projeto TestUser
+COPY test/user/UserTest.csproj /test/user/
 
 # Restore package deps
 RUN dotnet restore AlluRider.sln
 
 # Copia os diretórios de cada projeto para dentro de /services/order
-COPY services/order/Order.API/ /services/order/Order.API/
-COPY services/order/Order.Domain/ /services/order/Order.Domain
-COPY services/order/Order.Infra /services/order/Order.Infra
-COPY services/order/Order.Services /services/order/Order.Services
-COPY services/rabbitmq/RabbitMq.Notify /services/rabbitmq/RabbitMq.Notify
+COPY services/notify/Notify.API/ /services/notify/Notify.API/ 
+COPY services/notify/Notify.Domain/ /services/notify/Notify.Domain/
+COPY services/notify/Notify.Infra/ /services/notify/Notify.Infra
+COPY services/notify/Notify.Services/ /services/notify/Notify.Services
+COPY services/awsbroker/AWS.Notify/ /services/awsbroker/AWS.Notify/
 
 
-WORKDIR "/services/order/Order.API"
-RUN dotnet build "./Order.API.csproj" -c Release -o /app/src/out
+WORKDIR "/services/notify/Notify.API"
+RUN dotnet build "./Notify.API.csproj" -c Release -o /app/src/out
 
 #Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet",  "Order.API.dll"]
+ENTRYPOINT [ "dotnet",  "Notify.API.dll"]

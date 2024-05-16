@@ -76,10 +76,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - JwtSettings__Secret=CF6F07A3B43D4A6B5F9F5DE7687A392C6E71E2AABD7D2D83CFB0F58B6CE6C369
+      - Postgres__ConnectionString=Host=pg_db;Username=postgres;Password=postgres;Database=catalog; PORT=5432
       - Rabbitmq__HostName=rabbitmq 
       - Rabbitmq__UserName=user 
       - Rabbitmq__Password=password 
       - Rabbitmq__RetryCount=5 
+      - AwsNotify__accessKey=
+      - AwsNotify__secretKey=
+      - AwsNotify__region=sa-east-1
+      - AwsNotify__urlQueue=https://sqs.sa-east-1.amazonaws.com/653328364873
     ports:
       - "8081:80" 
     networks:
@@ -88,6 +93,51 @@ services:
       - pg_db
       - cache
       - rabbitmq
+
+  order-service:
+    image: randandel/order-service:latest
+    build:
+      context: .
+      dockerfile: services/order/Order.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - JwtSettings__Secret=CF6F07A3B43D4A6B5F9F5DE7687A392C6E71E2AABD7D2D83CFB0F58B6CE6C369
+      - Postgres__ConnectionString=Host=pg_db;Username=postgres;Password=postgres;Database=catalog; PORT=5432
+      - Rabbitmq__HostName=rabbitmq 
+      - Rabbitmq__UserName=user 
+      - Rabbitmq__Password=password 
+      - Rabbitmq__RetryCount=5 
+    ports:
+      - "8082:80" 
+    networks:
+      - dev
+    depends_on:
+      - pg_db
+      - cache
+      - rabbitmq
+   
+  notify-service:
+    image: randandel/notify-service:latest
+    build:
+      context: .
+      dockerfile: services/notify/Notify.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - JwtSettings__Secret=CF6F07A3B43D4A6B5F9F5DE7687A392C6E71E2AABD7D2D83CFB0F58B6CE6C369
+      - Postgres__ConnectionString=Host=pg_db;Username=postgres;Password=postgres;Database=catalog; PORT=5432
+      - AwsNotify__accessKey=
+      - AwsNotify__secretKey=
+      - AwsNotify__region=sa-east-1
+      - AwsNotify__urlQueue=https://sqs.sa-east-1.amazonaws.com/653328364873
+    ports:
+      - "8083:80" 
+    networks:
+      - dev
+    depends_on:
+      - pg_db
+
 
 volumes:
   pg-data: 

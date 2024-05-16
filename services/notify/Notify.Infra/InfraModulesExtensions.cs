@@ -3,7 +3,6 @@ using AWS.Notify.Interfaces;
 using AWS.Notify.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Notify.Infra.Context;
 using Notify.Infra.Interfaces;
 using Notify.Infra.Repositories;

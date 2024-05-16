@@ -25,13 +25,19 @@ namespace Vehicle.Services.Service
                 MetaData = moto
             };
             var message = JsonConvert.SerializeObject(data);
-
-            await _sendSQS.Send(
-                new RequestAws
-                {
-                    Method = "fyFabrication",
-                    Payload = message
-                }, "notify");
+            try
+            {
+                await _sendSQS.Send(
+                    new RequestAws
+                    {
+                        Method = "fyFabrication",
+                        Payload = message
+                    }, "notify");
+            }
+            catch (Exception ex)
+            {
+                //Não Gera exceção externa para não travar o fluxo, se não salvou a notificação tratar de outra forma. 
+            }
         }
     }
 }

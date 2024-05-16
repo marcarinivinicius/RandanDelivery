@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		docker-compose.yaml = docker-compose.yaml
-		docker-composeP.yaml = docker-composeP.yaml
-		DockerfileModel = DockerfileModel
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -62,13 +60,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.Notify", "services\awsb
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notify", "notify", "{840BBDDF-DC55-47CC-A5DE-77A25FDFD3A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notify.API", "services\notify\Notify.API\Notify.API.csproj", "{1EF40148-33B3-406D-A5A9-DD61EEF9E95B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notify.API", "services\notify\Notify.API\Notify.API.csproj", "{1EF40148-33B3-406D-A5A9-DD61EEF9E95B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notify.Domain", "services\notify\Notify.Domain\Notify.Domain.csproj", "{3864666A-8062-4BC9-AFB4-3330FC6B8662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notify.Domain", "services\notify\Notify.Domain\Notify.Domain.csproj", "{3864666A-8062-4BC9-AFB4-3330FC6B8662}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notify.Infra", "services\notify\Notify.Infra\Notify.Infra.csproj", "{65935DDF-492C-4318-A1FE-CEF74A1DDD50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notify.Infra", "services\notify\Notify.Infra\Notify.Infra.csproj", "{65935DDF-492C-4318-A1FE-CEF74A1DDD50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notify.Services", "services\notify\Notify.Services\Notify.Services.csproj", "{B877F9DF-94D3-4082-BE38-4C56DBC3112B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notify.Services", "services\notify\Notify.Services\Notify.Services.csproj", "{B877F9DF-94D3-4082-BE38-4C56DBC3112B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
